@@ -1,4 +1,4 @@
-package iuh.fit.springrestapiquanlybansach.configs;
+package iuh.fit.configs;
 
 
 import org.modelmapper.ModelMapper;

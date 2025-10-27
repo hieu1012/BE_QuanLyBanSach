@@ -1,11 +1,11 @@
-package iuh.fit.springrestapiquanlybansach.services.impl;
+package iuh.fit.services.impl;
 
-import iuh.fit.springrestapiquanlybansach.dtos.ProductDTO;
-import iuh.fit.springrestapiquanlybansach.entities.Product;
-import iuh.fit.springrestapiquanlybansach.exceptions.ItemNotFoundException;
-import iuh.fit.springrestapiquanlybansach.exceptions.ValidationException;
-import iuh.fit.springrestapiquanlybansach.repositories.ProductRepository;
-import iuh.fit.springrestapiquanlybansach.services.ProductService;
+import iuh.fit.dtos.ProductDTO;
+import iuh.fit.entities.Product;
+import iuh.fit.exceptions.ItemNotFoundException;
+import iuh.fit.exceptions.ValidationException;
+import iuh.fit.repositories.ProductRepository;
+import iuh.fit.services.ProductService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

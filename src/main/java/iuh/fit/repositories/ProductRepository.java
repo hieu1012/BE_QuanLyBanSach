@@ -1,6 +1,6 @@
-package iuh.fit.springrestapiquanlybansach.repositories;
+package iuh.fit.repositories;
 
-import iuh.fit.springrestapiquanlybansach.entities.Product;
+import iuh.fit.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

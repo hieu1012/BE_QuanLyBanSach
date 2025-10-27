@@ -1,4 +1,4 @@
-package iuh.fit.springrestapiquanlybansach.entities;
+package iuh.fit.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

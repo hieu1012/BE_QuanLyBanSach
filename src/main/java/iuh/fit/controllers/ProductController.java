@@ -1,8 +1,8 @@
-package iuh.fit.springrestapiquanlybansach.controllers;
+package iuh.fit.controllers;
 
-import iuh.fit.springrestapiquanlybansach.dtos.ProductDTO;
-import iuh.fit.springrestapiquanlybansach.entities.Product;
-import iuh.fit.springrestapiquanlybansach.services.ProductService;
+import iuh.fit.dtos.ProductDTO;
+import iuh.fit.entities.Product;
+import iuh.fit.services.ProductService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.List;
 
 @RestController
 public class ProductController {

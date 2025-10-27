@@ -1,7 +1,7 @@
-package iuh.fit.springrestapiquanlybansach.services;
+package iuh.fit.services;
 
-import iuh.fit.springrestapiquanlybansach.dtos.ProductDTO;
-import iuh.fit.springrestapiquanlybansach.entities.Product;
+import iuh.fit.dtos.ProductDTO;
+import iuh.fit.entities.Product;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

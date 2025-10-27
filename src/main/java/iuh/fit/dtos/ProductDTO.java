@@ -1,4 +1,4 @@
-package iuh.fit.springrestapiquanlybansach.dtos;
+package iuh.fit.dtos;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
