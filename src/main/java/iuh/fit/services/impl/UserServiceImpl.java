@@ -213,7 +213,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ItemNotFoundException("User not found with username: " + username));
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy user với username: " + username));
     }
 
     @Transactional
