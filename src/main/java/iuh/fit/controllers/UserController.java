@@ -1,12 +1,16 @@
 package iuh.fit.controllers;
 
 import iuh.fit.dtos.user.CreateUserRequest;
+import iuh.fit.dtos.user.LoginRequest;
 import iuh.fit.dtos.user.UpdateUserRequest;
 import iuh.fit.dtos.user.UserDTO;
 import iuh.fit.entities.User;
 import iuh.fit.entities.enums.Role;
+import iuh.fit.exceptions.ItemNotFoundException;
+import iuh.fit.exceptions.UnauthorizedException;
 import iuh.fit.services.UserService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springdoc.core.annotations.ParameterObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -28,6 +33,14 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ModelMapper modelMapper;
+
+    private UserDTO toDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
+    }
 
     /**
      * Mock user với quyền MASTER để test
@@ -131,5 +144,59 @@ public class UserController {
         response.put("data", userService.changePassword(id, oldPassword, newPassword, currentUser));
         response.put("message", "Đổi password thành công");
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // THÊM VÀO CUỐI CLASS UserController
+
+
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
+        // Lấy username và password từ Map thay vì LoginRequest object
+        String username = loginRequest.get("username");
+        String password = loginRequest.get("password");
+
+        logger.info("Đăng nhập với username: {}", username);
+
+        try {
+            // Tìm user theo username
+            User user = userService.findByUsername(username);
+
+            // Kiểm tra user có tồn tại không
+            if (user == null) {
+                throw new UnauthorizedException("Tài khoản hoặc mật khẩu không đúng");
+            }
+
+            // Kiểm tra tài khoản có active không
+            if (!user.getIsActive()) {
+                throw new UnauthorizedException("Tài khoản đã bị vô hiệu hóa");
+            }
+
+            // Kiểm tra mật khẩu
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                throw new UnauthorizedException("Tài khoản hoặc mật khẩu không đúng");
+            }
+
+            // Đăng nhập thành công
+            UserDTO userDTO = toDTO(user);
+
+            Map<String, Object> response = new LinkedHashMap<>();
+            response.put("status", HttpStatus.OK.value());
+            response.put("data", userDTO);
+            response.put("message", "Đăng nhập thành công");
+
+            logger.info("Đăng nhập thành công cho user: {}", user.getUsername());
+            return ResponseEntity.ok(response);
+
+        } catch (ItemNotFoundException e) {
+            logger.error("Không tìm thấy user: {}", username);
+            throw new UnauthorizedException("Tài khoản hoặc mật khẩu không đúng");
+        } catch (UnauthorizedException e) {
+            logger.error("Đăng nhập thất bại: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            logger.error("Lỗi khi đăng nhập: ", e);
+            throw new RuntimeException("Có lỗi xảy ra trong quá trình đăng nhập");
+        }
     }
 }
