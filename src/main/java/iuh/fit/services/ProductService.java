@@ -9,12 +9,21 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ProductService {
-    ProductDTO findById(Long id);
+
+    ProductDTO findById(int id);
+
     List<ProductDTO> findAll();
+
     Page<ProductDTO> findAllWithPaging(@ParameterObject Pageable pageable);
+
     ProductDTO save(Product product);
-    ProductDTO update(Long id, Product product);
-    boolean delete(Long id);
+
+    ProductDTO update(int id, Product product);
+
+    boolean delete(int id);
+
     List<ProductDTO> search(String keyword);
-    List<ProductDTO> findByCategory(Long categoryId);
+
+    List<ProductDTO> findByCategoryId(int categoryId);
+
 }
