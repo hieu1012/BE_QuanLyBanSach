@@ -1,7 +1,6 @@
 package iuh.fit.entities;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 @Entity
