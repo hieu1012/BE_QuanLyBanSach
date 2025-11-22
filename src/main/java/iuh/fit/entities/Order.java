@@ -23,21 +23,21 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name = "order_id", nullable = false, unique = true, length = 100)
     private String orderId;
 
-    @Column(nullable = false)
+    @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
+    @Column(name = "status", nullable = false, length = 30)
     private OrderStatus status;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
+    @Column(name = "payment_type", nullable = false, length = 50)
     private PaymentType paymentType;
 
-    @Column(nullable = false)
+    @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
 

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
@@ -26,17 +26,26 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
 
-    //Chi tiết đơn hàng
+    //Lấy đơn hàng theo ID
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Integer id) {
         return ResponseEntity.ok(orderService.findOrderById(id));
     }
 
     //Lấy danh sách đơn hàng theo người dùng
-    @GetMapping("/user/{userId}") // Endpoint cũ là /user/{userId}
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<OrderDTO>> getOrdersByUser(@PathVariable Integer userId) {
         return ResponseEntity.ok(orderService.findOrdersByUserId(userId));
     }
+
+    //Lấy danh sách đơn hàng có phân trang
+    @GetMapping
+    public ResponseEntity<Page<OrderSummaryDTO>> getAllOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(orderService.findAllOrders(PageRequest.of(page, size)));
+    }
+
 
     //Lọc theo trạng thái đơn hàng
     @GetMapping("/status/{status}")
@@ -50,37 +59,24 @@ public class OrderController {
         return ResponseEntity.ok(orderService.searchOrders(keyword));
     }
 
+    //Cập nhật trạng thái đơn hàng
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrderDTO> updateStatus(@PathVariable Integer id, @RequestParam OrderStatus newStatus) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(id, newStatus));
+    }
+
     //Xóa đơn hàng
-    @DeleteMapping("/admin/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Lọc đơn hàng theo khoảng thời gian (Báo cáo, thống kê - Admin)
+    //Lọc đơn hàng theo khoảng thời gian
     @GetMapping("/between")
     public ResponseEntity<List<OrderDTO>> getOrdersBetweenDates(
             @RequestParam LocalDateTime start,
             @RequestParam LocalDateTime end) {
         return ResponseEntity.ok(orderService.findOrdersBetweenDates(start, end));
-    }
-
-    @GetMapping("/admin")
-    public ResponseEntity<Page<OrderSummaryDTO>> getAllOrders(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(orderService.findAllOrders(PageRequest.of(page, size)));
-    }
-
-    // Cập nhật trạng thái đơn hàng (Admin)
-    @PutMapping("/admin/{id}/status")
-    public ResponseEntity<OrderDTO> updateStatus(@PathVariable Integer id, @RequestParam OrderStatus newStatus) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, newStatus));
-    }
-
-    // 3. Cập nhật đơn (Admin)
-    @PutMapping("/admin/{id}")
-    public ResponseEntity<OrderDTO> updateOrderAdmin(@PathVariable Integer id, @RequestBody OrderDTO orderDTO) {
-        return ResponseEntity.ok(orderService.updateOrderAdmin(id, orderDTO));
     }
 }
