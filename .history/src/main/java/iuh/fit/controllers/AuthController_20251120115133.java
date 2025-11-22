@@ -2,11 +2,10 @@ package iuh.fit.controllers;
 
 import iuh.fit.dtos.user.LoginRequest;
 import iuh.fit.dtos.user.RegisterRequest;
-import iuh.fit.dtos.user.ForgotPasswordRequest;
-import iuh.fit.dtos.user.ResetPasswordRequest;
 import iuh.fit.entities.User;
 import iuh.fit.entities.enums.Role;
 import iuh.fit.exceptions.UnauthorizedException;
+import iuh.fit.exceptions.ValidationException;
 import iuh.fit.repositories.UserRepository;
 import iuh.fit.utils.JwtUtil;
 import jakarta.validation.Valid;
@@ -18,10 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Authentication Controller
@@ -176,104 +173,6 @@ public class AuthController {
             
             logger.error("Registration failed: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
-
-    /**
-     * POST /api/auth/forgot-password
-     * Gửi reset token qua email để reset password
-     */
-    @PostMapping("/forgot-password")
-    public ResponseEntity<Map<String, Object>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
-        try {
-            // Tìm user theo email
-            User user = userRepository.findByEmail(request.getEmail())
-                    .orElseThrow(() -> new UnauthorizedException("Email không tồn tại trong hệ thống"));
-
-            // Tạo reset token
-            String resetToken = UUID.randomUUID().toString();
-            LocalDateTime resetTokenExpiry = LocalDateTime.now().plusHours(24); // Token có hiệu lực 24 giờ
-
-            // Lưu reset token và expiry vào database
-            user.setResetToken(resetToken);
-            user.setResetTokenExpiry(resetTokenExpiry);
-            userRepository.save(user);
-
-            // Tạo response
-            Map<String, Object> response = new LinkedHashMap<>();
-            response.put("status", HttpStatus.OK.value());
-            response.put("message", "Email reset password đã được gửi. Vui lòng kiểm tra email của bạn.");
-            
-            Map<String, Object> data = new LinkedHashMap<>();
-            data.put("resetToken", resetToken);
-            data.put("email", request.getEmail());
-            
-            response.put("data", data);
-
-            logger.info("Forgot password request for email: {}", request.getEmail());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-
-        } catch (UnauthorizedException e) {
-            Map<String, Object> errorResponse = new LinkedHashMap<>();
-            errorResponse.put("status", HttpStatus.NOT_FOUND.value());
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("error", "NOT_FOUND");
-            
-            logger.warn("Forgot password failed: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-        }
-    }
-
-    /**
-     * POST /api/auth/reset-password
-     * Reset password sử dụng reset token
-     */
-    @PostMapping("/reset-password")
-    public ResponseEntity<Map<String, Object>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
-        try {
-            // Kiểm tra password và confirmPassword có khớp không
-            if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-                Map<String, Object> errorResponse = new LinkedHashMap<>();
-                errorResponse.put("status", HttpStatus.BAD_REQUEST.value());
-                errorResponse.put("message", "Password và Confirm Password không khớp");
-                errorResponse.put("error", "VALIDATION_ERROR");
-                
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-            }
-
-            // Tìm user theo reset token
-            User user = userRepository.findByResetToken(request.getToken())
-                    .orElseThrow(() -> new UnauthorizedException("Reset token không hợp lệ"));
-
-            // Kiểm tra reset token có hết hạn không
-            if (user.getResetTokenExpiry() == null || LocalDateTime.now().isAfter(user.getResetTokenExpiry())) {
-                throw new UnauthorizedException("Reset token đã hết hạn");
-            }
-
-            // Cập nhật password mới
-            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-            user.setResetToken(null);
-            user.setResetTokenExpiry(null);
-            userRepository.save(user);
-
-            // Tạo response
-            Map<String, Object> response = new LinkedHashMap<>();
-            response.put("status", HttpStatus.OK.value());
-            response.put("message", "Đặt lại password thành công. Vui lòng đăng nhập với password mới.");
-            
-            response.put("data", null);
-
-            logger.info("Password reset successfully for user: {}", user.getUsername());
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-
-        } catch (UnauthorizedException e) {
-            Map<String, Object> errorResponse = new LinkedHashMap<>();
-            errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
-            errorResponse.put("message", e.getMessage());
-            errorResponse.put("error", "UNAUTHORIZED");
-            
-            logger.warn("Password reset failed: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 
