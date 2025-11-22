@@ -1,19 +1,25 @@
 package iuh.fit.services.impl;
 
 import iuh.fit.dtos.order.OrderDTO;
+import iuh.fit.dtos.order.OrderItemDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
-import iuh.fit.entities.Order;
+import iuh.fit.entities.*;
 import iuh.fit.entities.enums.OrderStatus;
 import iuh.fit.repositories.OrderItemRepository;
 import iuh.fit.repositories.OrderRepository;
+import iuh.fit.repositories.ProductRepository;
+import iuh.fit.repositories.UserRepository;
 import iuh.fit.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,21 +30,59 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository  orderItemRepository;
     private final ModelMapper modelMapper;
-//    private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+
+    private String generateOrderId() {
+        return "ORD-" + System.currentTimeMillis();
+    }
+
 
     //Tạo dơn hàng mới
     @Override
-    public OrderDTO createOrder(OrderDTO  orderDTO) {
-        Order order = modelMapper.map(orderDTO, Order.class);
+    @Transactional
+    public OrderDTO createOrder(OrderDTO orderDTO) {
+        Order order = new Order();
+        order.setOrderId(generateOrderId());
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
+        order.setPaymentType(orderDTO.getPaymentType());
 
-        Order savedOrder = orderRepository.save(order);
-        return modelMapper.map(savedOrder, OrderDTO.class);
+        User user = userRepository.findById(orderDTO.getUser().getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        order.setUser(user);
+
+        OrderAddress address = modelMapper.map(orderDTO.getOrderAddress(), OrderAddress.class);
+        order.setOrderAddress(address);
+
+        List<OrderItem> items = new ArrayList<>();
+        for (OrderItemDTO dto : orderDTO.getItems()) {
+            Product product = productRepository.findById(dto.getProduct().getId())
+                    .orElseThrow(() -> new RuntimeException("Product not found: " + dto.getProduct().getId()));
+
+            // Optionally check stock:
+            // if (product.getStock() < dto.getQuantity()) throw new RuntimeException("Insufficient stock...");
+
+            OrderItem it = new OrderItem();
+            it.setProduct(product);
+            it.setQuantity(dto.getQuantity());
+            // Prefer using product price (or dto.price if that's business rule)
+            it.setPrice(dto.getPrice() != null ? dto.getPrice() : product.getPrice());
+            it.setOrder(order);
+            items.add(it);
+        }
+
+        order.setItems(items);
+        order.setTotalPrice(orderDTO.getTotalPrice());
+        Order saved = orderRepository.save(order);
+        return modelMapper.map(saved, OrderDTO.class);
     }
+
+
 
     //Lấy đơn hàng theo ID
     @Override
+    @Transactional(readOnly = true)
     public OrderDTO findOrderById(Integer orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order Not Found"));
@@ -56,9 +100,24 @@ public class OrderServiceImpl implements OrderService {
 
     //Lấy danh sách đơn hàng có phân trang
     @Override
+    @EntityGraph(attributePaths = {"items", "items.product", "user"})
     public Page<OrderSummaryDTO> findAllOrders(Pageable pageable){
-        return  orderRepository.findAllWithPaging(pageable)
-                .map(o -> modelMapper.map(o, OrderSummaryDTO.class));
+        return orderRepository.findAllWithPaging(pageable)
+                .map(o -> {
+                    OrderSummaryDTO s = new OrderSummaryDTO();
+                    s.setId(o.getId());
+                    s.setOrderId(o.getOrderId());
+                    s.setOrderDate(o.getOrderDate());
+                    s.setStatus(o.getStatus().name());
+                    s.setPaymentType(o.getPaymentType().name());
+                    s.setTotalPrice(o.getTotalPrice());
+                    if (o.getItems() != null && !o.getItems().isEmpty()) {
+                        s.setFirstProductTitle(o.getItems().get(0).getProduct().getTitle());
+                        s.setTotalItem(o.getItems().stream().mapToInt(OrderItem::getQuantity).sum());
+                    }
+                    s.setUserEmail(o.getUser() != null ? o.getUser().getEmail() : null);
+                    return s;
+                });
     }
 
     //Lọc theo trạng thái
@@ -98,8 +157,51 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void deleteOrder(Integer id){
         orderRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public OrderDTO updateOrderAdmin(Integer orderId, OrderDTO orderDTO) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order Not Found"));
+
+        // Cập nhật địa chỉ giao hàng
+        if (orderDTO.getOrderAddress() != null) {
+            modelMapper.map(orderDTO.getOrderAddress(), order.getOrderAddress());
+        }
+
+        // Cập nhật payment type
+        if (orderDTO.getPaymentType() != null) {
+            order.setPaymentType(orderDTO.getPaymentType());
+        }
+
+        // Cập nhật trạng thái đơn hàng
+        if (orderDTO.getStatus() != null) {
+            order.setStatus(orderDTO.getStatus());
+        }
+
+        // Cập nhật items
+        if (orderDTO.getItems() != null) {
+            order.getItems().clear();
+            orderDTO.getItems().forEach(dto -> {
+                var item = modelMapper.map(dto, OrderItem.class);
+                item.setOrder(order);
+                order.getItems().add(item);
+            });
+        }
+
+        // Cập nhật tổng đơn
+        if (orderDTO.getTotalPrice() != null) {
+            order.setTotalPrice(orderDTO.getTotalPrice());
+        }
+
+        Order updated = orderRepository.save(order);
+        return modelMapper.map(updated, OrderDTO.class);
+    }
+
 
 }
