@@ -37,4 +37,8 @@ public interface OrderService {
 
     // Xóa đơn hàng
     void deleteOrder(Integer id);
+
+    // Cập nhật toàn bộ đơn hàng (dành cho Admin)
+    OrderDTO updateOrderAdmin(Integer orderId, OrderDTO orderDTO);
+
 }
