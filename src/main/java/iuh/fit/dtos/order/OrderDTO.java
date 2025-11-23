@@ -1,7 +1,6 @@
 package iuh.fit.dtos.order;
 
 import iuh.fit.dtos.user.UserDTO;
-import iuh.fit.entities.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
