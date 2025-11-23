@@ -94,9 +94,9 @@ public class SecurityConfig {
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         // Public endpoints - không cần xác thực
                         .requestMatchers(
-                                "/auth/**",
-                                "/products/**",
-                                "/categories/**",
+                                "/api/auth/**",
+                                "/api/products/**",
+                                "/api/categories/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
