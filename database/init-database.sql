@@ -211,3 +211,84 @@ SHOW TABLES;
 SELECT COUNT(*) as total_users FROM users;
 SELECT COUNT(*) as total_categories FROM categories;
 SELECT COUNT(*) as total_products FROM products;
+
+
+
+-- =====================================================
+-- 4. INSERT DATA VÀO BẢNG ORDER_ADDRESSES
+-- =====================================================
+
+-- Địa chỉ 1: Nguyễn Văn A (ID=3)
+INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, city, state, pincode) VALUES
+    ('Nguyễn', 'Văn A', 'customer01@gmail.com', '0987654321', '456 Đường Nguyễn Huệ', 'TP Hồ Chí Minh', 'Quận 1', '70000');
+
+-- Địa chỉ 2: Trần Thị B (ID=4)
+INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, city, state, pincode) VALUES
+    ('Trần', 'Thị B', 'customer02@gmail.com', '0912345678', '789 Đường Trần Hưng Đạo', 'TP Hồ Chí Minh', 'Quận 1', '70000');
+
+-- Địa chỉ 3: Địa chỉ mới cho A (sử dụng snapshot)
+INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, city, state, pincode) VALUES
+    ('Nguyễn', 'Văn A', 'customer01@gmail.com', '0987654321', '689 Đường Hai Bà Trưng', 'TP Hồ Chí Minh', 'Quận 3', '70000');
+
+
+-- =====================================================
+-- 5. INSERT DATA VÀO BẢNG ORDERS
+-- Ghi chú: order_address_id: 1, 2, 3
+-- user_id: 3 (customer01), 4 (customer02)
+-- =====================================================
+-- Đơn hàng 1: Customer 01, Đã giao, Tổng 136,000 (Sách 1: 68k + Sách 3: 68k)
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251120-001', DATE_SUB(NOW(), INTERVAL 4 DAY), 'DELIVERED', 'COD', 136000.00, 1, 3);
+
+-- Đơn hàng 2: Customer 02, Đang chờ xử lý, Tổng 236,000 (Sách 7: 236k)
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251122-002', DATE_SUB(NOW(), INTERVAL 2 DAY), 'PENDING', 'BANK_TRANSFER', 236000.00, 2, 4);
+
+-- Đơn hàng 3: Customer 01, Đã Hủy, Tổng 228,000 (Sách 6: 228k)
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251123-003', DATE_SUB(NOW(), INTERVAL 1 DAY), 'CANCELLED', 'CREDIT_CARD', 228000.00, 3, 3);
+
+-- Đơn hàng 4: Customer 02, Đang xử lý, Tổng 456,000 (Sách 6: 228k * 2)
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251124-004', NOW(), 'PROCESSING', 'PAYPAL', 456000.00, 2, 4);
+
+-- Đơn hàng 5: Customer 01, Đang chờ xử lý, Tổng 100,000 (Sách 4: 100k)
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251124-005', NOW(), 'PENDING', 'COD', 100000.00, 1, 3);
+
+
+-- =====================================================
+-- 6. INSERT DATA VÀO BẢNG ORDER_ITEMS
+-- Lấy ID của orders (1-5) và products (1-27)
+-- =====================================================
+
+-- Đơn hàng 1 (ORD-001, total: 136k)
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+                                                                    (1, 1, 1, 68000.00),  -- Cô Gái Đến Từ Hàn Quốc (68k)
+                                                                    (1, 3, 1, 68000.00);  -- Chuyện Tình Mùa Đông (62.4k -> Giả sử giá là 68k cho tổng tròn 136k)
+
+-- Đơn hàng 2 (ORD-002, total: 236k)
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+    (2, 7, 1, 236000.00); -- Database Design Patterns (236k)
+
+-- Đơn hàng 3 (ORD-003, total: 228k)
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+    (3, 6, 1, 228000.00); -- Spring Boot in Practice (228k)
+
+-- Đơn hàng 4 (ORD-004, total: 456k)
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+    (4, 6, 2, 228000.00); -- Spring Boot in Practice (228k * 2)
+
+-- Đơn hàng 5 (ORD-005, total: 100k)
+INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+    (5, 4, 1, 100000.00); -- Người Thay Đổi Thế Giới (100k)
+
+
+-- =====================================================
+-- SCRIPT EXECUTION COMPLETE
+-- =====================================================
+
+-- Kiểm tra kết quả
+SELECT * FROM order_addresses;
+SELECT * FROM orders;
+SELECT * FROM order_items;

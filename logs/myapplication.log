@@ -99,3 +99,73 @@
 2025-11-22T11:29:51.332+07:00 DEBUG 6360 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, */*] and supported [application/json]
 2025-11-22T11:29:51.337+07:00 DEBUG 6360 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [{123, 34, 111, 112, 101, 110, 97, 112, 105, 34, 58, 34, 51, 46, 49, 46, 48, 34, 44, 34, 105, 110, 10 (truncated)...]
 2025-11-22T11:29:51.338+07:00 DEBUG 6360 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-11-23T20:46:30.290+07:00  INFO 396 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 23-valhalla with PID 396 (D:\www\BE_QuanLyBanSach\target\classes started by Windows in D:\www\BE_QuanLyBanSach)
+2025-11-23T20:46:30.292+07:00  INFO 396 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-11-23T20:46:30.341+07:00  INFO 396 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-23T20:46:30.342+07:00  INFO 396 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-23T20:46:30.544+07:00  WARN 396 --- [SpringRestApiQuanLyBanSach] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [iuh.fit.SpringRestApiQuanLyBanSachApplication]
+2025-11-23T20:46:30.781+07:00 ERROR 396 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [iuh.fit.SpringRestApiQuanLyBanSachApplication]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:194)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:418)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:791)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:609)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at iuh.fit.SpringRestApiQuanLyBanSachApplication.main(SpringRestApiQuanLyBanSachApplication.java:14)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'globalExceptionHandler' for bean class [iuh.fit.exceptions.GlobalExceptionHandler] conflicts with existing, non-compatible bean definition of same name and class [iuh.fit.configs.GlobalExceptionHandler]
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.checkCandidate(ClassPathBeanDefinitionScanner.java:361)
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan(ClassPathBeanDefinitionScanner.java:288)
+	at org.springframework.context.annotation.ComponentScanAnnotationParser.parse(ComponentScanAnnotationParser.java:128)
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:346)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:281)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:204)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:172)
+	... 16 common frames omitted
+
+2025-11-23T22:32:19.458+07:00  INFO 11980 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 23-valhalla with PID 11980 (D:\www\BE_QuanLyBanSach\target\classes started by Windows in D:\www\BE_QuanLyBanSach)
+2025-11-23T22:32:19.460+07:00  INFO 11980 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-11-23T22:32:19.512+07:00  INFO 11980 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-23T22:32:19.512+07:00  INFO 11980 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-23T22:32:19.698+07:00  WARN 11980 --- [SpringRestApiQuanLyBanSach] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [iuh.fit.SpringRestApiQuanLyBanSachApplication]
+2025-11-23T22:32:19.872+07:00 ERROR 11980 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanDefinitionStoreException: Failed to parse configuration class [iuh.fit.SpringRestApiQuanLyBanSachApplication]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:194)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:418)
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349)
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118)
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:791)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:609)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at iuh.fit.SpringRestApiQuanLyBanSachApplication.main(SpringRestApiQuanLyBanSachApplication.java:14)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.context.annotation.ConflictingBeanDefinitionException: Annotation-specified bean name 'globalExceptionHandler' for bean class [iuh.fit.exceptions.GlobalExceptionHandler] conflicts with existing, non-compatible bean definition of same name and class [iuh.fit.configs.GlobalExceptionHandler]
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.checkCandidate(ClassPathBeanDefinitionScanner.java:361)
+	at org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan(ClassPathBeanDefinitionScanner.java:288)
+	at org.springframework.context.annotation.ComponentScanAnnotationParser.parse(ComponentScanAnnotationParser.java:128)
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:346)
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:281)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:204)
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:172)
+	... 16 common frames omitted
+

@@ -5,6 +5,9 @@ import iuh.fit.dtos.order.OrderItemDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
 import iuh.fit.entities.*;
 import iuh.fit.entities.enums.OrderStatus;
+import iuh.fit.entities.enums.Role;
+import iuh.fit.exceptions.ForbiddenException;
+import iuh.fit.exceptions.ItemNotFoundException;
 import iuh.fit.repositories.OrderItemRepository;
 import iuh.fit.repositories.OrderRepository;
 import iuh.fit.repositories.ProductRepository;
@@ -76,17 +79,6 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(orderDTO.getTotalPrice());
         Order saved = orderRepository.save(order);
         return modelMapper.map(saved, OrderDTO.class);
-    }
-
-
-
-    //Lấy đơn hàng theo ID
-    @Override
-    @Transactional(readOnly = true)
-    public OrderDTO findOrderById(Integer orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order Not Found"));
-        return modelMapper.map(order, OrderDTO.class);
     }
 
     //Lấy danh sách đơn hàng của 1 user
@@ -202,6 +194,39 @@ public class OrderServiceImpl implements OrderService {
         Order updated = orderRepository.save(order);
         return modelMapper.map(updated, OrderDTO.class);
     }
+    //Lấy chi tiết đơn hàng, kiểm tra User có phải là chủ đơn hàng không
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDTO findOrderByIdForUser(Integer orderId, User currentUser) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy đơn hàng: " + orderId));
 
+        // Kiểm tra quyền: Chỉ cho phép chủ đơn hàng (hoặc Admin/Master) xem
+        if (currentUser.getRole() != Role.MASTER && currentUser.getRole() != Role.ADMIN) {
+            if (!order.getUser().getId().equals(currentUser.getId())) {
+                throw new ForbiddenException("Bạn không có quyền xem đơn hàng này");
+            }
+        }
+
+        return modelMapper.map(order, OrderDTO.class);
+    }
+
+    //Lấy đơn hàng theo User và Status
+    @Override
+    public List<OrderDTO> findOrdersByUserIdAndStatus(Integer userId, OrderStatus status) {
+        return orderRepository.findByUserIdAndStatus(userId, status)
+                .stream()
+                .map(o -> modelMapper.map(o, OrderDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    //Lấy đơn hàng theo ID
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDTO findOrderById(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy đơn hàng: " + orderId));
+        return modelMapper.map(order, OrderDTO.class);
+    }
 
 }

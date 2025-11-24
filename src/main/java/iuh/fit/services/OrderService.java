@@ -2,6 +2,7 @@ package iuh.fit.services;
 
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
+import iuh.fit.entities.User;
 import iuh.fit.entities.enums.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,5 +41,11 @@ public interface OrderService {
 
     // Cập nhật toàn bộ đơn hàng (dành cho Admin)
     OrderDTO updateOrderAdmin(Integer orderId, OrderDTO orderDTO);
+
+    //Lấy đơn hàng theo ID, có kiểm tra quyền USER
+    OrderDTO findOrderByIdForUser(Integer orderId, User currentUser);
+
+    //Lấy đơn hàng theo User và Status
+    List<OrderDTO> findOrdersByUserIdAndStatus(Integer userId, OrderStatus status);
 
 }
