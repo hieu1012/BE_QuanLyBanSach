@@ -1,7 +1,9 @@
 package iuh.fit.services;
 
+import iuh.fit.dtos.CheckoutRequest;
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
+import iuh.fit.entities.Cart;
 import iuh.fit.entities.User;
 import iuh.fit.entities.enums.OrderStatus;
 import org.springframework.data.domain.Page;
@@ -47,5 +49,8 @@ public interface OrderService {
 
     //Lấy đơn hàng theo User và Status
     List<OrderDTO> findOrdersByUserIdAndStatus(Integer userId, OrderStatus status);
+
+    //Yêu cầu Thanh toán
+    OrderDTO checkout(User currentUser, Cart cart, CheckoutRequest request);
 
 }

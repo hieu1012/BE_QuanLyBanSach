@@ -1,5 +1,6 @@
 package iuh.fit.services.impl;
 
+import iuh.fit.dtos.CheckoutRequest;
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.dtos.order.OrderItemDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
@@ -227,6 +228,48 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy đơn hàng: " + orderId));
         return modelMapper.map(order, OrderDTO.class);
+    }
+
+    //Yêu cầu Thanh toán
+    @Override
+    @Transactional
+    public OrderDTO checkout(User currentUser, Cart cart, CheckoutRequest request) {
+        if (cart.getItems().isEmpty()) {
+            throw new RuntimeException("Giỏ hàng rỗng, không thể thanh toán.");
+        }
+
+        Order order = new Order();
+        order.setOrderId(generateOrderId());
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.PENDING); // Đơn mới luôn ở trạng thái PENDING
+        order.setPaymentType(request.getPaymentType());
+
+        // 1. Thiết lập User
+        order.setUser(currentUser);
+
+        // 2. Thiết lập Địa chỉ (snapshot)
+        OrderAddress address = modelMapper.map(request.getOrderAddress(), OrderAddress.class);
+        order.setOrderAddress(address);
+
+        // 3. Chuyển Cart Items thành Order Items
+        List<OrderItem> items = new ArrayList<>();
+        for (CartItem cartItem : cart.getItems()) {
+            // Kiểm tra stock ở đây (nếu cần)
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setQuantity(cartItem.getQuantity());
+            // Lấy giá từ CartItem (đã được lưu khi thêm vào giỏ)
+            orderItem.setPrice(cartItem.getUnitPrice());
+            orderItem.setOrder(order);
+            items.add(orderItem);
+        }
+
+        order.setItems(items);
+        order.setTotalPrice(cart.getTotalAmount()); // Tổng tiền lấy từ Cart Entity
+
+        Order saved = orderRepository.save(order);
+        return modelMapper.map(saved, OrderDTO.class);
     }
 
 }
