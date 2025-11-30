@@ -16,7 +16,7 @@ public class OpenAPIConfiguration {
 	public OpenAPI defineOpenApi() {
 		Server server = new Server();
 		// Nếu API của bạn được triển khai ở context path khác (ví dụ /api/v1) hãy chỉnh ở đây
-		server.setUrl("/api");
+		server.setUrl("");
 		server.setDescription("Base path for Book Store API");
 
 //		Info information = new Info()

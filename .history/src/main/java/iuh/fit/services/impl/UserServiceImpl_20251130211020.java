@@ -362,6 +362,12 @@ public class UserServiceImpl implements UserService {
         }
 
         Page<User> users = userRepository.searchByKeywordAndIsActive(keyword, isActive, pageable);
+        
+        // ADMIN không được xem MASTER
+        if (currentUser.getRole() == Role.ADMIN) {
+            users = users.filter(u -> u.getRole() != Role.MASTER);
+        }
+
         return users.map(this::toDTO);
     }
 }

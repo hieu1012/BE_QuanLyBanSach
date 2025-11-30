@@ -18,7 +18,7 @@ import java.util.*;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret:MySecretKeyForJWTTokenGenerationAndValidationPurposesOnly1234567890!@#$%^&*()")
+    @Value("${jwt.secret:MySecretKeyForJWTTokenGenerationAndValidationPurposesOnlyDontChangeThisKeyItIsVeryLongAndImportantForSecurityPurposes1234567890}")
     private String jwtSecret;
 
     @Value("${jwt.expiration:86400000}")  // 24 hours in milliseconds

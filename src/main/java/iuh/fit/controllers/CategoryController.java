@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/categories")
 public class CategoryController {
 
     private final static Logger logger = LoggerFactory.getLogger(CategoryController.class.getName());
@@ -26,7 +26,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/categories/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getCategoryById(@PathVariable int id) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
@@ -34,7 +34,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/categories")
+    @PostMapping("")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     public ResponseEntity<Map<String, Object>> saveCategory(@RequestBody Category category) {
         Map<String, Object> response = new LinkedHashMap<>();
@@ -43,7 +43,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/categories/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     public ResponseEntity<Map<String, Object>> updateCategory(@PathVariable int id, @RequestBody Category category) {
         Map<String, Object> response = new LinkedHashMap<>();
@@ -52,7 +52,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/categories/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     public ResponseEntity<Map<String, Object>> deleteCategory(@PathVariable int id) {
         Map<String, Object> response = new LinkedHashMap<>();
@@ -61,23 +61,22 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/categories")
-    public ResponseEntity<Map<String, Object>> getCategories(@RequestParam(required = false) String keyword) {
+    @GetMapping("")
+    public ResponseEntity<Map<String, Object>> getCategories() {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-
-        if (keyword == null || keyword.isEmpty()) {
-            response.put("data", categoryService.findAll());
-        } else {
-            response.put("data", categoryService.search(keyword));
-        }
-
+        response.put("data", categoryService.findAll());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/categoriesHasPage")
-    public ResponseEntity<Page<CategoryDTO>> getCategories(@ParameterObject Pageable pageable) {
-        Page<CategoryDTO> response = categoryService.findAllWithPaging(pageable);
+    @GetMapping("/hasPage")
+    public ResponseEntity<Page<CategoryDTO>> getCategories(@ParameterObject Pageable pageable, @RequestParam(required = false) String keyword) {
+        Page<CategoryDTO> response;
+        if (keyword == null || keyword.isEmpty()) {
+            response = categoryService.findAllWithPaging(pageable);
+        } else {
+            response = categoryService.searchWithPaging(keyword, pageable);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -336,7 +336,15 @@ public class UserServiceImpl implements UserService {
             throw new ForbiddenException("Bạn không có quyền tìm kiếm theo trạng thái hoạt động");
         }
 
-        Page<User> users = userRepository.findByIsActive(isActive, pageable);
+        Page<User> users;
+        if (currentUser.getRole() == Role.ADMIN) {
+            // ADMIN không được xem MASTER
+            users = userRepository.findByRoleNot(Role.MASTER, pageable);
+            users = users.filter(u -> u.getIsActive().equals(isActive));
+        } else {
+            users = userRepository.findByIsActive(isActive, pageable);
+        }
+
         return users.map(this::toDTO);
     }
 
@@ -362,6 +370,12 @@ public class UserServiceImpl implements UserService {
         }
 
         Page<User> users = userRepository.searchByKeywordAndIsActive(keyword, isActive, pageable);
+        
+        // ADMIN không được xem MASTER
+        if (currentUser.getRole() == Role.ADMIN) {
+            users = users.filter(u -> u.getRole() != Role.MASTER);
+        }
+
         return users.map(this::toDTO);
     }
 }

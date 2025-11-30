@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * Quản lý người dùng - Chỉ admin có quyền truy cập
  */
 @RestController
-@RequestMapping("/api/admin/users")
+@RequestMapping("/admin/users")
 @PreAuthorize("hasAnyRole('ADMIN', 'MASTER')")
 public class AdminController {
 

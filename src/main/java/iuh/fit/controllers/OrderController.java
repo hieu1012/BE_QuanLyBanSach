@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,19 +56,18 @@ public class OrderController {
     @GetMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'MASTER')")
     public ResponseEntity<Page<OrderSummaryDTO>> getOrdersByFilter(
-            // Tham số tìm kiếm
+            //Tìm kiếm
             @RequestParam(required = false) String keyword,
-            // Tham số lọc trạng thái
+            //Lọc trạng thái
             @RequestParam(required = false) OrderStatus status,
-            // Tham số lọc thời gian
+            //Lọc thời gian
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
-            // Tham số phân trang
+            //Phân trang
             @ParameterObject Pageable pageable) {
 
         User currentUser = getCurrentUser();
 
-        // Service sẽ tự động lọc theo currentUser.getId() nếu là USER
         Page<OrderSummaryDTO> orders = orderService.getOrdersByFilter(
                 currentUser, keyword, status, startDate, endDate, pageable);
 

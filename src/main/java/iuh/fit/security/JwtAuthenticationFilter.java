@@ -28,6 +28,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // Bỏ qua JWT check cho auth endpoints
+        String requestPath = request.getRequestURI();
+        if (requestPath.contains("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String token = extractTokenFromRequest(request);
 

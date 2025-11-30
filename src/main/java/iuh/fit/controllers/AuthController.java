@@ -28,7 +28,7 @@ import java.util.UUID;
  * Xử lý login/logout và JWT token management
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
