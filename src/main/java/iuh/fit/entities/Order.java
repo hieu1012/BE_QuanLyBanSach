@@ -40,9 +40,11 @@ public class Order {
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_address_id", nullable = false)
     private OrderAddress orderAddress;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -50,4 +52,6 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
+
+
 }
