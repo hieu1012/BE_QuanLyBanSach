@@ -118,6 +118,33 @@ CREATE TABLE IF NOT EXISTS order_items (
 );
 
 -- =====================================================
+-- TABLE: carts
+-- =====================================================
+CREATE TABLE IF NOT EXISTS carts (
+                                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                     user_id BIGINT NOT NULL UNIQUE,
+                                     total_amount DOUBLE NOT NULL DEFAULT 0.0,
+                                     created_at DATETIME NOT NULL,
+                                     updated_at DATETIME NOT NULL,
+                                     FOREIGN KEY (user_id) REFERENCES users(id),
+                                     INDEX idx_user_id (user_id)
+    );
+
+-- =====================================================
+-- TABLE: cart_items
+-- =====================================================
+CREATE TABLE IF NOT EXISTS cart_items (
+                                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                          cart_id BIGINT NOT NULL,
+                                          product_id INT NOT NULL,
+                                          quantity INT NOT NULL,
+                                          unit_price DOUBLE NOT NULL,
+                                          FOREIGN KEY (cart_id) REFERENCES carts(id),
+                                          FOREIGN KEY (product_id) REFERENCES products(id),
+                                          UNIQUE KEY uk_cart_product (cart_id, product_id)
+    );
+
+-- =====================================================
 -- 1. INSERT DATA VÀO BẢNG USERS
 -- =====================================================
 -- NOTE: All passwords are hashed using BCrypt (Spring Security)
@@ -236,23 +263,23 @@ INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, c
 -- Ghi chú: order_address_id: 1, 2, 3
 -- user_id: 3 (customer01), 4 (customer02)
 -- =====================================================
--- Đơn hàng 1: Customer 01, Đã giao, Tổng 136,000 (Sách 1: 68k + Sách 3: 68k)
+-- Đơn hàng 1
 INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
     ('ORD-20251120-001', DATE_SUB(NOW(), INTERVAL 4 DAY), 'DELIVERED', 'COD', 136000.00, 1, 3);
 
--- Đơn hàng 2: Customer 02, Đang chờ xử lý, Tổng 236,000 (Sách 7: 236k)
+-- Đơn hàng 2
 INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
     ('ORD-20251122-002', DATE_SUB(NOW(), INTERVAL 2 DAY), 'PENDING', 'BANK_TRANSFER', 236000.00, 2, 4);
 
--- Đơn hàng 3: Customer 01, Đã Hủy, Tổng 228,000 (Sách 6: 228k)
+-- Đơn hàng 3
 INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
     ('ORD-20251123-003', DATE_SUB(NOW(), INTERVAL 1 DAY), 'CANCELLED', 'CREDIT_CARD', 228000.00, 3, 3);
 
--- Đơn hàng 4: Customer 02, Đang xử lý, Tổng 456,000 (Sách 6: 228k * 2)
+-- Đơn hàng 4
 INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
     ('ORD-20251124-004', NOW(), 'PROCESSING', 'PAYPAL', 456000.00, 2, 4);
 
--- Đơn hàng 5: Customer 01, Đang chờ xử lý, Tổng 100,000 (Sách 4: 100k)
+-- Đơn hàng 5
 INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
     ('ORD-20251124-005', NOW(), 'PENDING', 'COD', 100000.00, 1, 3);
 
@@ -264,24 +291,24 @@ INSERT INTO orders (order_id, order_date, status, payment_type, total_price, ord
 
 -- Đơn hàng 1 (ORD-001, total: 136k)
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-                                                                    (1, 1, 1, 68000.00),  -- Cô Gái Đến Từ Hàn Quốc (68k)
-                                                                    (1, 3, 1, 68000.00);  -- Chuyện Tình Mùa Đông (62.4k -> Giả sử giá là 68k cho tổng tròn 136k)
+                                                                    (1, 1, 1, 68000.00),
+                                                                    (1, 3, 1, 68000.00);
 
 -- Đơn hàng 2 (ORD-002, total: 236k)
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (2, 7, 1, 236000.00); -- Database Design Patterns (236k)
+    (2, 7, 1, 236000.00);
 
 -- Đơn hàng 3 (ORD-003, total: 228k)
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (3, 6, 1, 228000.00); -- Spring Boot in Practice (228k)
+    (3, 6, 1, 228000.00);
 
 -- Đơn hàng 4 (ORD-004, total: 456k)
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (4, 6, 2, 228000.00); -- Spring Boot in Practice (228k * 2)
+    (4, 6, 2, 228000.00);
 
 -- Đơn hàng 5 (ORD-005, total: 100k)
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (5, 4, 1, 100000.00); -- Người Thay Đổi Thế Giới (100k)
+    (5, 4, 1, 100000.00);
 
 
 -- =====================================================
@@ -292,3 +319,27 @@ INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
 SELECT * FROM order_addresses;
 SELECT * FROM orders;
 SELECT * FROM order_items;
+
+-- =====================================================
+-- 7. INSERT DATA VÀO BẢNG CARTS và CART_ITEMS
+-- =====================================================
+
+-- 1. Tạo Giỏ hàng cho customer01 (ID=3)
+INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
+    (3, 308000.00, NOW(), NOW());
+
+-- 2. Tạo Giỏ hàng cho customer02 (ID=4)
+INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
+    (4, 132000.00, NOW(), NOW());
+
+UPDATE carts SET total_amount = 344000.00 WHERE id = 1;
+
+INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
+                                                                       (1, 15, 1, 124000.00),
+                                                                       (1, 16, 1, 108000.00),
+                                                                       (1, 17, 1, 112000.00);
+
+-- Items cho customer02 (ID=4, Cart ID=2): Total 132,000
+-- Sách 10 (Chiến Lược Marketing Hiệu Quả - 132k) * 1
+INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
+    (2, 10, 1, 132000.00);

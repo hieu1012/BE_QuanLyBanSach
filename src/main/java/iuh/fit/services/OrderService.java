@@ -23,17 +23,14 @@ public interface OrderService {
     //Lấy danh sách đơn hàng của một user (lịch sử mua hàng)
     List<OrderDTO> findOrdersByUserId(Integer userId);
 
-    //Lấy danh sách đơn hàng có phân trang (dành cho admin)
-    Page<OrderSummaryDTO> findAllOrders(Pageable pageable);
-
-    //Lọc đơn hàng theo trạng thái (Pending, Delivered,...)
-    List<OrderDTO> findOrdersByStatus(OrderStatus status);
-
-    //Lọc đơn hàng trong khoảng thời gian
-    List<OrderDTO> findOrdersBetweenDates(LocalDateTime start, LocalDateTime end);
-
-    //Tìm kiếm đơn hàng theo từ khóa
-    List<OrderDTO> searchOrders(String keyword);
+    Page<OrderSummaryDTO> getOrdersByFilter(
+            User currentUser,
+            String keyword,
+            OrderStatus status,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            Pageable pageable
+    );
 
     //Cập nhật trạng thái đơn hàng (admin)
     OrderDTO updateOrderStatus(Integer orderId, OrderStatus newStatus);

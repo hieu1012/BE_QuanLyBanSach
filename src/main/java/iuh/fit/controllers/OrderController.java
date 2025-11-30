@@ -8,8 +8,9 @@ import iuh.fit.exceptions.UnauthorizedException;
 import iuh.fit.repositories.UserRepository;
 import iuh.fit.services.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,20 +51,26 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderDTO));
     }
 
-    //Lịch sử đơn hàng (User)
+
     @GetMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'MASTER')")
-    public ResponseEntity<List<OrderDTO>> getOrdersByUser(
-            @RequestParam(required = false) OrderStatus status) {
+    public ResponseEntity<Page<OrderSummaryDTO>> getOrdersByFilter(
+            // Tham số tìm kiếm
+            @RequestParam(required = false) String keyword,
+            // Tham số lọc trạng thái
+            @RequestParam(required = false) OrderStatus status,
+            // Tham số lọc thời gian
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            // Tham số phân trang
+            @ParameterObject Pageable pageable) {
 
         User currentUser = getCurrentUser();
-        List<OrderDTO> orders;
 
-        if (status != null) {
-            orders = orderService.findOrdersByUserIdAndStatus(currentUser.getId().intValue(), status);
-        } else {
-            orders = orderService.findOrdersByUserId(currentUser.getId().intValue());
-        }
+        // Service sẽ tự động lọc theo currentUser.getId() nếu là USER
+        Page<OrderSummaryDTO> orders = orderService.getOrdersByFilter(
+                currentUser, keyword, status, startDate, endDate, pageable);
+
         return ResponseEntity.ok(orders);
     }
 

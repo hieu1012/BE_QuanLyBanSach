@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -91,52 +91,64 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    //Lấy danh sách đơn hàng có phân trang
     @Override
-    @EntityGraph(attributePaths = {"items", "items.product", "user"})
-    public Page<OrderSummaryDTO> findAllOrders(Pageable pageable){
-        return orderRepository.findAllWithPaging(pageable)
-                .map(o -> {
-                    OrderSummaryDTO s = new OrderSummaryDTO();
-                    s.setId(o.getId());
-                    s.setOrderId(o.getOrderId());
-                    s.setOrderDate(o.getOrderDate());
-                    s.setStatus(o.getStatus().name());
-                    s.setPaymentType(o.getPaymentType().name());
-                    s.setTotalPrice(o.getTotalPrice());
-                    if (o.getItems() != null && !o.getItems().isEmpty()) {
-                        s.setFirstProductTitle(o.getItems().get(0).getProduct().getTitle());
-                        s.setTotalItem(o.getItems().stream().mapToInt(OrderItem::getQuantity).sum());
-                    }
-                    s.setUserEmail(o.getUser() != null ? o.getUser().getEmail() : null);
-                    return s;
-                });
-    }
+    public Page<OrderSummaryDTO> getOrdersByFilter(
+            User currentUser,
+            String keyword,
+            OrderStatus status,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            Pageable pageable) {
 
-    //Lọc theo trạng thái
-    @Override
-    public List<OrderDTO> findOrdersByStatus(OrderStatus status) {
-        return orderRepository.findByStatus(status)
-                .stream()
-                .map(o -> modelMapper.map(o, OrderDTO.class))
-                .collect(Collectors.toList());
-    }
+        // 1. Phân quyền và tạo Specification cơ bản
+        Specification<Order> spec = (root, query, cb) -> null;
 
-    //Lọc đơn hàng trong khoảng thời gian
-    public List<OrderDTO> findOrdersBetweenDates(LocalDateTime start, LocalDateTime end) {
-        return orderRepository.findOrdersBetweenDates(start, end)
-                .stream()
-                .map(o -> modelMapper.map(o, OrderDTO.class))
-                .collect(Collectors.toList());
-    }
+        if (currentUser.getRole() == Role.USER) {
+            // User chỉ xem đơn hàng của chính mình
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("user").get("id"), currentUser.getId()));
+        } else if (currentUser.getRole() != Role.ADMIN && currentUser.getRole() != Role.MASTER) {
+            // Cấm nếu không phải USER, ADMIN, MASTER
+            throw new ForbiddenException("Bạn không có quyền xem danh sách đơn hàng");
+        }
 
-    //tìm kiếm đơn hàng
-    @Override
-    public List<OrderDTO> searchOrders(String keyword){
-        return orderRepository.search(keyword)
-                .stream()
-                .map(o -> modelMapper.map(o, OrderDTO.class))
-                .collect(Collectors.toList());
+        // 2. Thêm điều kiện Lọc theo Trạng thái
+        if (status != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
+        }
+
+        // 3. Thêm điều kiện Tìm kiếm theo Từ khóa (orderId hoặc fullName)
+        if (keyword != null && !keyword.isBlank()) {
+            String lowerCaseKeyword = "%" + keyword.toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("orderId")), lowerCaseKeyword),
+                    cb.like(cb.lower(root.get("user").get("fullName")), lowerCaseKeyword)
+            ));
+        }
+
+        // 4. Thêm điều kiện Lọc theo Khoảng thời gian
+        if (startDate != null && endDate != null) {
+            spec = spec.and((root, query, cb) -> cb.between(root.get("orderDate"), startDate, endDate));
+        }
+
+        // 5. Thực thi truy vấn với Phân trang
+        Page<Order> orders = orderRepository.findAll(spec, pageable);
+
+        // 6. Ánh xạ kết quả sang OrderSummaryDTO
+        return orders.map(o -> {
+            OrderSummaryDTO s = new OrderSummaryDTO();
+            s.setId(o.getId());
+            s.setOrderId(o.getOrderId());
+            s.setOrderDate(o.getOrderDate());
+            s.setStatus(o.getStatus().name());
+            s.setPaymentType(o.getPaymentType().name());
+            s.setTotalPrice(o.getTotalPrice());
+            if (o.getItems() != null && !o.getItems().isEmpty()) {
+                s.setFirstProductTitle(o.getItems().get(0).getProduct().getTitle());
+                s.setTotalItem(o.getItems().stream().mapToInt(OrderItem::getQuantity).sum());
+            }
+            s.setUserEmail(o.getUser() != null ? o.getUser().getEmail() : null);
+            return s;
+        });
     }
 
     //Cập nhật trạng thái đơn hàng
