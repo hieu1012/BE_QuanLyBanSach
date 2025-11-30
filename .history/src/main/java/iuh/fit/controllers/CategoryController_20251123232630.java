@@ -52,7 +52,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/categories/{id}")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     public ResponseEntity<Map<String, Object>> deleteCategory(@PathVariable int id) {
         Map<String, Object> response = new LinkedHashMap<>();
@@ -61,7 +61,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("")
+    @GetMapping("/categories")
     public ResponseEntity<Map<String, Object>> getCategories(@RequestParam(required = false) String keyword) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
@@ -75,7 +75,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/hasPage")
+    @GetMapping("/categoriesHasPage")
     public ResponseEntity<Page<CategoryDTO>> getCategories(@ParameterObject Pageable pageable) {
         Page<CategoryDTO> response = categoryService.findAllWithPaging(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);

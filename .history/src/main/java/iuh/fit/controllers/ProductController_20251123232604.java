@@ -1,8 +1,8 @@
 package iuh.fit.controllers;
 
-import iuh.fit.dtos.CategoryDTO;
-import iuh.fit.entities.Category;
-import iuh.fit.services.CategoryService;
+import iuh.fit.dtos.ProductDTO;
+import iuh.fit.entities.Product;
+import iuh.fit.services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
@@ -18,66 +18,74 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/categories")
-public class CategoryController {
+@RequestMapping("/products")
+public class ProductController {
 
-    private final static Logger logger = LoggerFactory.getLogger(CategoryController.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(ProductController.class.getName());
 
     @Autowired
-    private CategoryService categoryService;
+    private ProductService productService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getCategoryById(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> getProductById(@PathVariable int id) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("data", categoryService.findById(id));
+        response.put("data", productService.findById(id));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("")
+    @PostMapping("/products")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    public ResponseEntity<Map<String, Object>> saveCategory(@RequestBody Category category) {
+    public ResponseEntity<Map<String, Object>> saveProduct(@RequestBody Product product) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.CREATED.value());
-        response.put("data", categoryService.save(category));
+        response.put("data", productService.save(product));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/products/{id}")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    public ResponseEntity<Map<String, Object>> updateCategory(@PathVariable int id, @RequestBody Category category) {
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable int id, @RequestBody Product product) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("data", categoryService.update(id, category));
+        response.put("data", productService.update(id, product));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/products/{id}")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    public ResponseEntity<Map<String, Object>> deleteCategory(@PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable int id) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("data", categoryService.delete(id));
+        response.put("data", productService.delete(id));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("")
-    public ResponseEntity<Map<String, Object>> getCategories(@RequestParam(required = false) String keyword) {
+    @GetMapping("/products")
+    public ResponseEntity<Map<String, Object>> getProducts(@RequestParam(required = false) String keyword) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
 
         if (keyword == null || keyword.isEmpty()) {
-            response.put("data", categoryService.findAll());
+            response.put("data", productService.findAll());
         } else {
-            response.put("data", categoryService.search(keyword));
+            response.put("data", productService.search(keyword));
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/hasPage")
-    public ResponseEntity<Page<CategoryDTO>> getCategories(@ParameterObject Pageable pageable) {
-        Page<CategoryDTO> response = categoryService.findAllWithPaging(pageable);
+    @GetMapping("/productsHasPage")
+    public ResponseEntity<Page<ProductDTO>> getProducts(@ParameterObject Pageable pageable) {
+        Page<ProductDTO> response = productService.findAllWithPaging(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/products/category/{id}")
+    public ResponseEntity<Map<String, Object>> getProductsByCategory(@PathVariable int id) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("data", productService.findByCategoryId(id));
+        return ResponseEntity.ok(response);
     }
 }
