@@ -6,7 +6,8 @@ import iuh.fit.entities.enums.OrderStatus;
 import iuh.fit.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +22,6 @@ import java.util.List;
 public class AdminOrderController {
 
     private final OrderService orderService;
-
-    //Quản lý đơn (Admin)
-    @GetMapping
-    public ResponseEntity<Page<OrderSummaryDTO>> getAllOrders(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        // Trả về danh sách đơn hàng có phân trang
-        return ResponseEntity.ok(orderService.findAllOrders(PageRequest.of(page, size)));
-    }
 
     //Cập nhật đơn (Admin)
     @PutMapping("/{id}")
@@ -54,23 +45,22 @@ public class AdminOrderController {
         return ResponseEntity.noContent().build();
     }
 
-    //Tìm kiếm đơn hàng
-    @GetMapping("/search")
-    public ResponseEntity<List<OrderDTO>> searchOrders(@RequestParam String keyword) {
-        return ResponseEntity.ok(orderService.searchOrders(keyword));
-    }
+    @GetMapping
+    public ResponseEntity<Page<OrderSummaryDTO>> getOrdersByFilter(
+            // Tham số tìm kiếm
+            @RequestParam(required = false) String keyword,
+            // Tham số lọc trạng thái
+            @RequestParam(required = false) OrderStatus status,
+            // Tham số lọc thời gian
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            // Tham số phân trang
+            @ParameterObject Pageable pageable) {
 
-    //Lọc đơn hàng theo khoảng thời gian
-    @GetMapping("/between")
-    public ResponseEntity<List<OrderDTO>> getOrdersBetweenDates(
-            @RequestParam LocalDateTime start,
-            @RequestParam LocalDateTime end) {
-        return ResponseEntity.ok(orderService.findOrdersBetweenDates(start, end));
-    }
+        // ADMIN/MASTER có thể xem tất cả đơn hàng (pass null cho currentUser để Service biết)
+        Page<OrderSummaryDTO> orders = orderService.getOrdersByFilter(
+                null, keyword, status, startDate, endDate, pageable);
 
-    //Lọc theo trạng thái đơn hàng
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByStatus(@PathVariable OrderStatus status) {
-        return ResponseEntity.ok(orderService.findOrdersByStatus(status));
+        return ResponseEntity.ok(orders);
     }
 }
