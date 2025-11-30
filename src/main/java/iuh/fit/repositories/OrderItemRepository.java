@@ -14,7 +14,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 
     //Thống kê số lượng sản phẩm được bán theo productId
     @Query("SELECT SUM(i.quantity) FROM OrderItem i WHERE i.product.id = :productId")
-    Integer countSoldByProductId(@Param("productId") Integer productId);
-
+    Long countSoldByProductId(@Param("productId") Integer productId);
 
 }
