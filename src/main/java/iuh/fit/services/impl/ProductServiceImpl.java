@@ -110,11 +110,61 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductDTO> searchWithPaging(String keyword, @ParameterObject Pageable pageable) {
+        return productRepository.searchWithPaging(keyword, pageable).map(this::convertToDTO);
+    }
+
+    @Override
     public List<ProductDTO> findByCategoryId(int categoryId) {
         return productRepository.findByCategoryId(categoryId)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ProductDTO> findByPriceBetween(double minPrice, double maxPrice, Pageable pageable) {
+        return productRepository.findByPriceBetween(minPrice, maxPrice, pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> findByCategoryIdWithPaging(int categoryId, Pageable pageable) {
+        return productRepository.findByCategoryIdWithPaging(categoryId, pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> findByCategoryAndPriceBetween(int categoryId, double minPrice, double maxPrice, Pageable pageable) {
+        return productRepository.findByCategoryAndPriceBetween(categoryId, minPrice, maxPrice, pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> searchWithKeywordAndPrice(String keyword, double minPrice, double maxPrice, Pageable pageable) {
+        return productRepository.searchWithKeywordAndPrice(keyword, minPrice, maxPrice, pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> findByStockGreaterThan(int minStock, Pageable pageable) {
+        return productRepository.findByStockGreaterThan(minStock, pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> findByStockLessThanOrEqual(int maxStock, Pageable pageable) {
+        return productRepository.findByStockLessThanOrEqual(maxStock, pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> findOutOfStock(Pageable pageable) {
+        return productRepository.findOutOfStock(pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> findByCategoryAndStockGreaterThan(int categoryId, int minStock, Pageable pageable) {
+        return productRepository.findByCategoryAndStockGreaterThan(categoryId, minStock, pageable).map(this::convertToDTO);
+    }
+
+    @Override
+    public Page<ProductDTO> findByPriceAndStockGreaterThan(double minPrice, double maxPrice, int minStock, Pageable pageable) {
+        return productRepository.findByPriceAndStockGreaterThan(minPrice, maxPrice, minStock, pageable).map(this::convertToDTO);
     }
 
 }

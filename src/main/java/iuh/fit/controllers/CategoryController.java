@@ -62,22 +62,21 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Map<String, Object>> getCategories(@RequestParam(required = false) String keyword) {
+    public ResponseEntity<Map<String, Object>> getCategories() {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-
-        if (keyword == null || keyword.isEmpty()) {
-            response.put("data", categoryService.findAll());
-        } else {
-            response.put("data", categoryService.search(keyword));
-        }
-
+        response.put("data", categoryService.findAll());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/hasPage")
-    public ResponseEntity<Page<CategoryDTO>> getCategories(@ParameterObject Pageable pageable) {
-        Page<CategoryDTO> response = categoryService.findAllWithPaging(pageable);
+    public ResponseEntity<Page<CategoryDTO>> getCategories(@ParameterObject Pageable pageable, @RequestParam(required = false) String keyword) {
+        Page<CategoryDTO> response;
+        if (keyword == null || keyword.isEmpty()) {
+            response = categoryService.findAllWithPaging(pageable);
+        } else {
+            response = categoryService.searchWithPaging(keyword, pageable);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

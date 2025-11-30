@@ -23,4 +23,6 @@ public interface CategoryService {
     boolean delete(int id);
 
     List<CategoryDTO> search(String keyword);
+
+    Page<CategoryDTO> searchWithPaging(String keyword, @ParameterObject Pageable pageable);
 }

@@ -1,4 +1,4 @@
-package iuh.fit.configs;
+package iuh.fit.exceptions;
 
 import iuh.fit.exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;

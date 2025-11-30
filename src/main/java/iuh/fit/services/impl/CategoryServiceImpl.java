@@ -109,4 +109,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<CategoryDTO> searchWithPaging(String keyword, @ParameterObject Pageable pageable) {
+        return categoryRepository.searchWithPaging(keyword, pageable).map(this::convertToDTO);
+    }
 }
