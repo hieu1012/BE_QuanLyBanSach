@@ -56,14 +56,14 @@ public class OrderController {
     @GetMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'MASTER')")
     public ResponseEntity<Page<OrderSummaryDTO>> getOrdersByFilter(
-            // Tham số tìm kiếm
+            //Tìm kiếm
             @RequestParam(required = false) String keyword,
-            // Tham số lọc trạng thái
+            //Lọc trạng thái
             @RequestParam(required = false) OrderStatus status,
-            // Tham số lọc thời gian
+            //Lọc thời gian
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
-            // Tham số phân trang
+            //Phân trang
             @ParameterObject Pageable pageable) {
 
         User currentUser = getCurrentUser();
