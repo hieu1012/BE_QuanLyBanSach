@@ -68,7 +68,6 @@ public class OrderController {
 
         User currentUser = getCurrentUser();
 
-        // Service sẽ tự động lọc theo currentUser.getId() nếu là USER
         Page<OrderSummaryDTO> orders = orderService.getOrdersByFilter(
                 currentUser, keyword, status, startDate, endDate, pageable);
 
