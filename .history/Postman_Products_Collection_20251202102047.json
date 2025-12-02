@@ -1,0 +1,451 @@
+{
+  "info": {
+    "_postman_id": "product-api-test",
+    "name": "QuanLyBanSach - Products API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Get All Products (Không Phân Trang)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products"]
+        }
+      }
+    },
+    {
+      "name": "2. Get Product By ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "1"]
+        }
+      }
+    },
+    {
+      "name": "3. Get Products By Category",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/category/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "category", "1"]
+        }
+      }
+    },
+    {
+      "name": "4. Get Products With Pagination (Tất Cả)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. Search By Keyword",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&keyword=java",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "keyword",
+              "value": "java"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "6. Filter By Category (Phân Trang)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&categoryId=1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "categoryId",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "7. Filter By Price Range",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&minPrice=100000&maxPrice=500000",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "minPrice",
+              "value": "100000"
+            },
+            {
+              "key": "maxPrice",
+              "value": "500000"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "8. Filter By Stock",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&minStock=5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "minStock",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "9. Filter: Keyword + Price",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&keyword=java&minPrice=100000&maxPrice=500000",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "keyword",
+              "value": "java"
+            },
+            {
+              "key": "minPrice",
+              "value": "100000"
+            },
+            {
+              "key": "maxPrice",
+              "value": "500000"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "10. Filter: Category + Price",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&categoryId=1&minPrice=100000&maxPrice=500000",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "categoryId",
+              "value": "1"
+            },
+            {
+              "key": "minPrice",
+              "value": "100000"
+            },
+            {
+              "key": "maxPrice",
+              "value": "500000"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "11. Filter: Category + Stock",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&categoryId=1&minStock=5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "categoryId",
+              "value": "1"
+            },
+            {
+              "key": "minStock",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "12. Filter: Price + Stock",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&minPrice=100000&maxPrice=500000&minStock=5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "minPrice",
+              "value": "100000"
+            },
+            {
+              "key": "maxPrice",
+              "value": "500000"
+            },
+            {
+              "key": "minStock",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "13. Filter: Tất Cả (Keyword + Category + Price + Stock)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/products/hasPage?page=0&size=10&keyword=java&categoryId=1&minPrice=100000&maxPrice=500000&minStock=5",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "hasPage"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "keyword",
+              "value": "java"
+            },
+            {
+              "key": "categoryId",
+              "value": "1"
+            },
+            {
+              "key": "minPrice",
+              "value": "100000"
+            },
+            {
+              "key": "maxPrice",
+              "value": "500000"
+            },
+            {
+              "key": "minStock",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "14. Create Product (Cần ADMIN/MASTER)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_JWT_TOKEN_HERE",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Sách Lập Trình Java Nâng Cao\",\n  \"description\": \"Sách hướng dẫn lập trình Java cho người nâng cao\",\n  \"price\": 250000,\n  \"stock\": 20,\n  \"imageName\": \"java-advanced.jpg\",\n  \"categoryId\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/products",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products"]
+        }
+      }
+    },
+    {
+      "name": "15. Update Product (Cần ADMIN/MASTER)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_JWT_TOKEN_HERE",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Sách Lập Trình Java Nâng Cao (Updated)\",\n  \"description\": \"Sách hướng dẫn lập trình Java cho người nâng cao\",\n  \"price\": 280000,\n  \"stock\": 25,\n  \"imageName\": \"java-advanced-v2.jpg\",\n  \"categoryId\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/products/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "1"]
+        }
+      }
+    },
+    {
+      "name": "16. Delete Product (Cần ADMIN/MASTER)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_JWT_TOKEN_HERE",
+            "disabled": false
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8081/products/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8081",
+          "path": ["products", "1"]
+        }
+      }
+    }
+  ]
+}

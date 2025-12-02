@@ -23,8 +23,6 @@ public interface ProductService {
 
     ProductDTO update(int id, Product product);
 
-    ProductDTO updateFromDTO(int id, CreateProductDTO dto);
-
     boolean delete(int id);
 
     List<ProductDTO> search(String keyword);

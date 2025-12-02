@@ -2,7 +2,10 @@ package iuh.fit.controllers;
 
 import iuh.fit.dtos.CreateProductDTO;
 import iuh.fit.dtos.ProductDTO;
+import iuh.fit.entities.Product;
 import iuh.fit.services.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
+    private final static Logger logger = LoggerFactory.getLogger(ProductController.class.getName());
 
     @Autowired
     private ProductService productService;

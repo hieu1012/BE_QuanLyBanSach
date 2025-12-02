@@ -2,7 +2,10 @@ package iuh.fit.controllers;
 
 import iuh.fit.dtos.CreateProductDTO;
 import iuh.fit.dtos.ProductDTO;
+import iuh.fit.entities.Product;
 import iuh.fit.services.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,8 @@ import java.util.Map;
 @RequestMapping("/products")
 public class ProductController {
 
+    private final static Logger logger = LoggerFactory.getLogger(ProductController.class.getName());
+
     @Autowired
     private ProductService productService;
 
@@ -32,19 +37,19 @@ public class ProductController {
 
     @PostMapping("")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    public ResponseEntity<Map<String, Object>> saveProduct(@RequestBody CreateProductDTO dto) {
+    public ResponseEntity<Map<String, Object>> saveProduct(@RequestBody Product product) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.CREATED.value());
-        response.put("data", productService.saveFromDTO(dto));
+        response.put("data", productService.save(product));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable int id, @RequestBody CreateProductDTO dto) {
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable int id, @RequestBody Product product) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("data", productService.updateFromDTO(id, dto));
+        response.put("data", productService.update(id, product));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

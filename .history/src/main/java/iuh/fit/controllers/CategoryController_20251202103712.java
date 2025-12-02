@@ -41,10 +41,10 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    public ResponseEntity<Map<String, Object>> updateCategory(@PathVariable int id, @RequestBody CreateCategoryDTO dto) {
+    public ResponseEntity<Map<String, Object>> updateCategory(@PathVariable int id, @RequestBody Category category) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("data", categoryService.updateFromDTO(id, dto));
+        response.put("data", categoryService.update(id, category));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
