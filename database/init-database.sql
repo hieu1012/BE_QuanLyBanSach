@@ -24,8 +24,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- TABLE: users
 -- =====================================================
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
+                                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(100),
@@ -37,25 +37,25 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at DATETIME NOT NULL,
     INDEX idx_username (username),
     INDEX idx_email (email)
-);
+    );
 
 -- =====================================================
 -- TABLE: categories
 -- =====================================================
 CREATE TABLE IF NOT EXISTS categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
+                                          id INT AUTO_INCREMENT PRIMARY KEY,
+                                          name VARCHAR(150) NOT NULL,
     image_name VARCHAR(255),
     is_active BOOLEAN NOT NULL DEFAULT true,
     INDEX idx_name (name)
-);
+    );
 
 -- =====================================================
 -- TABLE: products
 -- =====================================================
 CREATE TABLE IF NOT EXISTS products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
+                                        id INT AUTO_INCREMENT PRIMARY KEY,
+                                        title VARCHAR(200) NOT NULL,
     description VARCHAR(1000),
     price DOUBLE,
     discount_price DOUBLE,
@@ -67,14 +67,14 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (category_id) REFERENCES categories(id),
     INDEX idx_title (title),
     INDEX idx_category_id (category_id)
-);
+    );
 
 -- =====================================================
 -- TABLE: order_addresses
 -- =====================================================
 CREATE TABLE IF NOT EXISTS order_addresses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
+                                               id INT AUTO_INCREMENT PRIMARY KEY,
+                                               first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL,
     mobile_no VARCHAR(20) NOT NULL,
@@ -82,14 +82,14 @@ CREATE TABLE IF NOT EXISTS order_addresses (
     city VARCHAR(100) NOT NULL,
     state VARCHAR(100) NOT NULL,
     pincode VARCHAR(10) NOT NULL
-);
+    );
 
 -- =====================================================
 -- TABLE: orders
 -- =====================================================
 CREATE TABLE IF NOT EXISTS orders (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id VARCHAR(100) NOT NULL UNIQUE,
+                                      id INT AUTO_INCREMENT PRIMARY KEY,
+                                      order_id VARCHAR(100) NOT NULL UNIQUE,
     order_date DATETIME NOT NULL,
     status VARCHAR(30) NOT NULL,
     payment_type VARCHAR(50) NOT NULL,
@@ -100,22 +100,22 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (user_id) REFERENCES users(id),
     INDEX idx_order_id (order_id),
     INDEX idx_user_id (user_id)
-);
+    );
 
 -- =====================================================
 -- TABLE: order_items
 -- =====================================================
 CREATE TABLE IF NOT EXISTS order_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price DOUBLE NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
+                                           id INT AUTO_INCREMENT PRIMARY KEY,
+                                           order_id INT NOT NULL,
+                                           product_id INT NOT NULL,
+                                           quantity INT NOT NULL,
+                                           price DOUBLE NOT NULL,
+                                           FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES products(id),
     INDEX idx_order_id (order_id),
     INDEX idx_product_id (product_id)
-);
+    );
 
 -- =====================================================
 -- TABLE: carts
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS carts (
                                      created_at DATETIME NOT NULL,
                                      updated_at DATETIME NOT NULL,
                                      FOREIGN KEY (user_id) REFERENCES users(id),
-                                     INDEX idx_user_id (user_id)
+    INDEX idx_user_id (user_id)
     );
 
 -- =====================================================
@@ -140,8 +140,8 @@ CREATE TABLE IF NOT EXISTS cart_items (
                                           quantity INT NOT NULL,
                                           unit_price DOUBLE NOT NULL,
                                           FOREIGN KEY (cart_id) REFERENCES carts(id),
-                                          FOREIGN KEY (product_id) REFERENCES products(id),
-                                          UNIQUE KEY uk_cart_product (cart_id, product_id)
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    UNIQUE KEY uk_cart_product (cart_id, product_id)
     );
 
 -- =====================================================
@@ -174,14 +174,14 @@ INSERT INTO users (username, email, password, full_name, phone_number, address, 
 -- 2. INSERT DATA VÀO BẢNG CATEGORIES
 -- =====================================================
 INSERT INTO categories (name, is_active) VALUES
-('Sách Văn Học', true),
-('Sách Kỹ Thuật', true),
-('Sách Kinh Tế', true),
-('Sách Tâm Lý', true),
-('Sách Lịch Sử', true),
-('Sách Khoa Học', true),
-('Sách Ngoại Ngữ', true),
-('Sách Trẻ Em', true);
+                                             ('Sách Văn Học', true),
+                                             ('Sách Kỹ Thuật', true),
+                                             ('Sách Kinh Tế', true),
+                                             ('Sách Tâm Lý', true),
+                                             ('Sách Lịch Sử', true),
+                                             ('Sách Khoa Học', true),
+                                             ('Sách Ngoại Ngữ', true),
+                                             ('Sách Trẻ Em', true);
 
 -- =====================================================
 -- 3. INSERT DATA VÀO BẢNG PRODUCTS
@@ -259,57 +259,54 @@ INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, c
 
 
 -- =====================================================
--- 5. INSERT DATA VÀO BẢNG ORDERS
--- Ghi chú: order_address_id: 1, 2, 3
--- user_id: 3 (customer01), 4 (customer02)
--- =====================================================
--- Đơn hàng 1
-INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
-    ('ORD-20251120-001', DATE_SUB(NOW(), INTERVAL 4 DAY), 'DELIVERED', 'COD', 136000.00, 1, 3);
-
--- Đơn hàng 2
-INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
-    ('ORD-20251122-002', DATE_SUB(NOW(), INTERVAL 2 DAY), 'PENDING', 'BANK_TRANSFER', 236000.00, 2, 4);
-
--- Đơn hàng 3
-INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
-    ('ORD-20251123-003', DATE_SUB(NOW(), INTERVAL 1 DAY), 'CANCELLED', 'CREDIT_CARD', 228000.00, 3, 3);
-
--- Đơn hàng 4
-INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
-    ('ORD-20251124-004', NOW(), 'PROCESSING', 'PAYPAL', 456000.00, 2, 4);
-
--- Đơn hàng 5
-INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
-    ('ORD-20251124-005', NOW(), 'PENDING', 'COD', 100000.00, 1, 3);
-
-
--- =====================================================
--- 6. INSERT DATA VÀO BẢNG ORDER_ITEMS
--- Lấy ID của orders (1-5) và products (1-27)
+-- 5 & 6. INSERT DATA VÀO BẢNG ORDERS & ORDER_ITEMS
+-- Tăng đơn DELIVERED để có dữ liệu thống kê tốt hơn
 -- =====================================================
 
--- Đơn hàng 1 (ORD-001, total: 136k)
-INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-                                                                    (1, 1, 1, 68000.00),
-                                                                    (1, 3, 1, 68000.00);
+-- Xóa dữ liệu cũ trước khi chèn lại
+DELETE FROM order_items;
+DELETE FROM orders;
+DELETE FROM order_addresses;
+ALTER TABLE order_addresses AUTO_INCREMENT = 1;
+ALTER TABLE orders AUTO_INCREMENT = 1;
+ALTER TABLE order_items AUTO_INCREMENT = 1;
 
--- Đơn hàng 2 (ORD-002, total: 236k)
+-- **Đơn hàng 1 (DELIVERED, user_id=3 - Nguyễn Văn A)**
+-- Item: Sách 1 (68k) * 1 + Sách 3 (62.4k) * 1 = 130400.00
+INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, city, state, pincode) VALUES
+    ('Nguyễn', 'Văn A', 'customer01@gmail.com', '0987654321', '456 Đường Nguyễn Huệ', 'TP Hồ Chí Minh', 'Quận 1', '70000');
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251120-001', DATE_SUB(NOW(), INTERVAL 5 DAY), 'DELIVERED', 'COD', 130400.00, LAST_INSERT_ID(), 3);
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (2, 7, 1, 236000.00);
+                                                                    (LAST_INSERT_ID(), 1, 1, 68000.00), -- Cô Gái Đến Từ Hàn Quốc
+                                                                    (LAST_INSERT_ID(), 3, 1, 62400.00); -- Chuyện Tình Mùa Đông
 
--- Đơn hàng 3 (ORD-003, total: 228k)
+-- **Đơn hàng 2 (DELIVERED, user_id=4 - Trần Thị B) - Top Customer**
+-- Item: Sách 6 (Spring Boot - 228k) * 2 = 456000.00
+INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, city, state, pincode) VALUES
+    ('Trần', 'Thị B', 'customer02@gmail.com', '0912345678', '789 Đường Trần Hưng Đạo', 'TP Hồ Chí Minh', 'Quận 1', '70000');
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251122-002', DATE_SUB(NOW(), INTERVAL 3 DAY), 'DELIVERED', 'BANK_TRANSFER', 456000.00, LAST_INSERT_ID(), 4);
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (3, 6, 1, 228000.00);
+    (LAST_INSERT_ID(), 6, 2, 228000.00); -- Spring Boot in Practice (sách bán chạy)
 
--- Đơn hàng 4 (ORD-004, total: 456k)
+-- **Đơn hàng 3 (PROCESSING, user_id=3)**
+-- Item: Sách 4 (Người Thay Đổi TG - 100k) * 1
+INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, city, state, pincode) VALUES
+    ('Nguyễn', 'Văn A', 'customer01@gmail.com', '0987654321', '689 Đường Hai Bà Trưng', 'TP Hồ Chí Minh', 'Quận 3', '70000');
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251123-003', DATE_SUB(NOW(), INTERVAL 1 DAY), 'PROCESSING', 'CREDIT_CARD', 100000.00, LAST_INSERT_ID(), 3);
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (4, 6, 2, 228000.00);
+    (LAST_INSERT_ID(), 4, 1, 100000.00);
 
--- Đơn hàng 5 (ORD-005, total: 100k)
+-- **Đơn hàng 4 (PENDING, user_id=4)**
+-- Item: Sách 17 (Điều Khiển Cảm Xúc - 112k) * 1
+INSERT INTO order_addresses (first_name, last_name, email, mobile_no, address, city, state, pincode) VALUES
+    ('Trần', 'Thị B', 'customer02@gmail.com', '0912345678', '789 Đường Trần Hưng Đạo', 'TP Hồ Chí Minh', 'Quận 1', '70000');
+INSERT INTO orders (order_id, order_date, status, payment_type, total_price, order_address_id, user_id) VALUES
+    ('ORD-20251203-004', NOW(), 'PENDING', 'COD', 112000.00, LAST_INSERT_ID(), 4);
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
-    (5, 4, 1, 100000.00);
-
+    (LAST_INSERT_ID(), 17, 1, 112000.00);
 
 -- =====================================================
 -- SCRIPT EXECUTION COMPLETE
@@ -324,13 +321,26 @@ SELECT * FROM order_items;
 -- 7. INSERT DATA VÀO BẢNG CARTS và CART_ITEMS
 -- =====================================================
 
--- 1. Tạo Giỏ hàng cho customer01 (ID=3)
-INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
-    (3, 308000.00, NOW(), NOW());
+-- Xóa dữ liệu cũ trước khi chèn lại
+DELETE FROM cart_items;
+DELETE FROM carts;
+ALTER TABLE carts AUTO_INCREMENT = 1;
+ALTER TABLE cart_items AUTO_INCREMENT = 1;
 
--- 2. Tạo Giỏ hàng cho customer02 (ID=4)
+-- **Giỏ hàng 1: customer01 (ID=3)**
+-- Items: Sách 15 (124k) * 1 + Sách 16 (108k) * 1 = 232000.00
+INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
+    (3, 232000.00, NOW(), NOW());
+INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
+                                                                       (1, 15, 1, 124000.00), -- Sức Khỏe Tâm Thần
+                                                                       (1, 16, 1, 108000.00); -- Tự Tin Và Tự Yêu Bản Thân
+
+-- **Giỏ hàng 2: customer02 (ID=4)**
+-- Items: Sách 10 (132k) * 1
 INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
     (4, 132000.00, NOW(), NOW());
+INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
+    (2, 10, 1, 132000.00); -- Chiến Lược Marketing Hiệu Quả
 
 UPDATE carts SET total_amount = 344000.00 WHERE id = 1;
 
