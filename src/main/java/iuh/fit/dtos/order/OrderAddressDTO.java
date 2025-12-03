@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderAddressDTO {
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String address;
