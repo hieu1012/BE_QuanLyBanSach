@@ -12,7 +12,7 @@ import lombok.*;
 public class OrderAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "address", nullable = false, length = 255)
     private String address;

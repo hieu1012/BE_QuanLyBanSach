@@ -1,6 +1,7 @@
 package iuh.fit.repositories;
 
 import iuh.fit.entities.OrderItem;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +17,11 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
     @Query("SELECT SUM(i.quantity) FROM OrderItem i WHERE i.product.id = :productId")
     Long countSoldByProductId(@Param("productId") Integer productId);
 
+    //Thống kê Sản phẩm Bán chạy: Tổng số lượng bán và Tổng giá trị
+    @Query(value = "SELECT i.product.title, SUM(i.quantity), SUM(i.price * i.quantity) " +
+            "FROM OrderItem i " +
+            "WHERE i.order.status = iuh.fit.entities.enums.OrderStatus.DELIVERED " +
+            "GROUP BY i.product.title " +
+            "ORDER BY SUM(i.quantity) DESC")
+    List<Object[]> getTopSellingProductStats(Pageable pageable);
 }

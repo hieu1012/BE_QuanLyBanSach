@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSummaryDTO {
-    private Integer id;
+    private Long id;
     private String orderId;
     private LocalDateTime orderDate;
     private String status;
