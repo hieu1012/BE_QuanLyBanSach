@@ -173,15 +173,27 @@ INSERT IGNORE INTO users (username, email, password, full_name, phone_number, ad
 -- =====================================================
 -- 2. INSERT DATA VÀO BẢNG CATEGORIES
 -- =====================================================
-INSERT IGNORE INTO categories (name, description, is_active) VALUES
-('Sách Văn Học', 'Tập hợp các tác phẩm văn học nổi tiếng từ các tác giả trong nước và nước ngoài', true),
-('Sách Kỹ Thuật', 'Các sách hướng dẫn về lập trình, công nghệ thông tin và phần mềm', true),
-('Sách Kinh Tế', 'Sách về quản lý, kinh doanh, đầu tư và phát triển kỹ năng kinh doanh', true),
-('Sách Tâm Lý', 'Những tác phẩm về tâm lý học, cải thiện bản thân và kỹ năng cuộc sống', true),
-('Sách Lịch Sử', 'Sách tường thuật về các sự kiện lịch sử và tiểu sử những nhân vật lịch sử', true),
-('Sách Khoa Học', 'Các sách về khoa học tự nhiên, vũ trụ, sinh học và công nghệ hiện đại', true),
-('Sách Ngoại Ngữ', 'Sách học tiếng Anh, tiếng Pháp và các ngoại ngữ khác', true),
-('Sách Trẻ Em', 'Sách thiếu nhi với các câu chuyện vui nhộn và có tính giáo dục', true);
+<<<<<<< Updated upstream
+INSERT INTO categories (name, is_active) VALUES
+                                             ('Sách Văn Học', true),
+                                             ('Sách Kỹ Thuật', true),
+                                             ('Sách Kinh Tế', true),
+                                             ('Sách Tâm Lý', true),
+                                             ('Sách Lịch Sử', true),
+                                             ('Sách Khoa Học', true),
+                                             ('Sách Ngoại Ngữ', true),
+                                             ('Sách Trẻ Em', true);
+=======
+INSERT IGNORE INTO categories (name, is_active) VALUES
+('Sách Văn Học', true),
+('Sách Kỹ Thuật', true),
+('Sách Kinh Tế', true),
+('Sách Tâm Lý', true),
+('Sách Lịch Sử', true),
+('Sách Khoa Học', true),
+('Sách Ngoại Ngữ', true),
+('Sách Trẻ Em', true);
+>>>>>>> Stashed changes
 
 -- =====================================================
 -- 3. INSERT DATA VÀO BẢNG PRODUCTS

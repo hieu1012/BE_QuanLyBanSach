@@ -161,7 +161,6 @@ public class CategoryServiceImpl implements CategoryService {
         
         category.setName(dto.getName());
         category.setImageName(dto.getImageName());
-        category.setDescription(dto.getDescription());
         category.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
         
         // Validate
