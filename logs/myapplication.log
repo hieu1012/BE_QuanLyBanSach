@@ -3,3 +3,408 @@
 2025-12-05T00:21:38.705+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-12-05T00:21:38.707+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown initiated...
 2025-12-05T00:21:38.710+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown completed.
+=======
+2025-12-06T20:50:37.779+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 3852 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
+2025-12-06T20:50:37.785+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-12-06T20:50:37.826+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-06T20:50:37.827+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-06T20:50:38.915+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06T20:50:38.990+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 66 ms. Found 7 JPA repository interfaces.
+2025-12-06T20:50:39.568+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-06T20:50:39.585+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-06T20:50:39.586+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-12-06T20:50:39.637+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-06T20:50:39.637+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1810 ms
+2025-12-06T20:50:39.799+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-12-06T20:50:40.341+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06T20:50:40.374+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-06T20:50:40.494+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@16f9d749
+2025-12-06T20:50:40.496+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-06T20:50:41.619+07:00  WARN 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 3780-HY000: Referencing column 'order_address_id' and referenced column 'id' in foreign key constraint 'FKx1t8eioxmuh2e77oqahf2ctn' are incompatible.
+2025-12-06T20:50:41.621+07:00  WARN 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 3780-HY000: Referencing column 'order_id' and referenced column 'id' in foreign key constraint 'FKbioxgbv59vetrxe0ejfubep1w' are incompatible.
+2025-12-06T20:50:41.625+07:00  WARN 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 3780-HY000: Referencing column 'order_id' and referenced column 'id' in foreign key constraint 'FKbioxgbv59vetrxe0ejfubep1w' are incompatible.
+2025-12-06T20:50:41.650+07:00  WARN 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 3780-HY000: Referencing column 'order_address_id' and referenced column 'id' in foreign key constraint 'FKx1t8eioxmuh2e77oqahf2ctn' are incompatible.
+2025-12-06T20:50:41.703+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:50:41.958+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-12-06T20:50:44.899+07:00  WARN 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-06T20:50:45.033+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 55 mappings in 'requestMappingHandlerMapping'
+2025-12-06T20:50:45.082+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-12-06T20:50:45.184+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-12-06T20:50:45.231+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-12-06T20:50:45.231+07:00  WARN 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-12-06T20:50:45.429+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-06T20:50:45.478+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-06T20:50:45.708+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-12-06T20:50:45.770+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-12-06T20:50:45.783+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Started SpringRestApiQuanLyBanSachApplication in 8.525 seconds (process running for 8.919)
+2025-12-06T20:51:14.723+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-06T20:51:14.724+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-12-06T20:51:14.724+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2025-12-06T20:51:14.724+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2025-12-06T20:51:14.724+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2025-12-06T20:51:14.727+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@54c49bd1
+2025-12-06T20:51:14.728+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@3ba486de
+2025-12-06T20:51:14.728+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-12-06T20:51:14.729+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2025-12-06T20:51:14.780+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/categories/1", parameters={}
+2025-12-06T20:51:14.784+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to iuh.fit.controllers.CategoryController#getCategoryById(int)
+2025-12-06T20:51:14.879+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2025-12-06T20:51:14.880+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{status=200, data=CategoryDTO(id=1, name=Sách Văn Học, imageName=null, description=null, isActive=tr (truncated)...]
+2025-12-06T20:51:14.931+07:00 DEBUG 3852 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-12-06T20:51:37.264+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-06T20:51:37.275+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-12-06T20:51:37.283+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:51:37.286+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-12-06T20:51:37.293+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-12-06T20:51:49.372+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 22412 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
+2025-12-06T20:51:49.373+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-12-06T20:51:49.408+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-06T20:51:49.408+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-06T20:51:50.233+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06T20:51:50.293+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 54 ms. Found 7 JPA repository interfaces.
+2025-12-06T20:51:50.741+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-06T20:51:50.751+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-06T20:51:50.752+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-12-06T20:51:50.789+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-06T20:51:50.789+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1380 ms
+2025-12-06T20:51:50.912+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-12-06T20:51:51.248+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06T20:51:51.271+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-06T20:51:51.348+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@2c70e9c6
+2025-12-06T20:51:51.349+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-06T20:51:52.308+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 1064-42000: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'if exists UK64t7ox312pqal3p7fg9o503c2' at line 1
+2025-12-06T20:51:52.326+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 1064-42000: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'if exists UKhmsk25beh6atojvle1xuymjj0' at line 1
+2025-12-06T20:51:52.338+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 1064-42000: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'if exists UK6dotkott2kjsp8vw4d0m25fb7' at line 1
+2025-12-06T20:51:52.352+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.m.jdbc.message.server.ErrorPacket      : Error: 1064-42000: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'if exists UKr43af9ap4edm43mmtq01oddj6' at line 1
+2025-12-06T20:51:52.631+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:51:52.815+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-12-06T20:51:55.335+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-06T20:51:55.448+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 55 mappings in 'requestMappingHandlerMapping'
+2025-12-06T20:51:55.496+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-12-06T20:51:55.595+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-12-06T20:51:55.641+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-12-06T20:51:55.642+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-12-06T20:51:55.817+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-06T20:51:55.859+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-06T20:51:56.084+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-12-06T20:51:56.143+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-12-06T20:51:56.156+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Started SpringRestApiQuanLyBanSachApplication in 7.179 seconds (process running for 7.526)
+2025-12-06T20:55:54.119+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-06T20:55:54.119+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-12-06T20:55:54.119+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2025-12-06T20:55:54.119+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2025-12-06T20:55:54.120+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2025-12-06T20:55:54.123+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@67afacb9
+2025-12-06T20:55:54.125+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@b06c691
+2025-12-06T20:55:54.126+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-12-06T20:55:54.128+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+2025-12-06T20:55:54.187+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/categories", parameters={}
+2025-12-06T20:55:54.189+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to iuh.fit.controllers.CategoryController#getCategories()
+2025-12-06T20:55:54.290+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2025-12-06T20:55:54.291+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{status=200, data=[CategoryDTO(id=1, name=Sách Văn Học, imageName=null, description=Tập hợp các tác  (truncated)...]
+2025-12-06T20:55:54.338+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-12-06T20:56:40.888+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-3] o.s.web.servlet.DispatcherServlet        : POST "/auth/login", parameters={}
+2025-12-06T20:56:40.890+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to iuh.fit.controllers.AuthController#login(LoginRequest)
+2025-12-06T20:56:40.926+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-3] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [LoginRequest(username=master, password=1111)]
+2025-12-06T20:56:41.114+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-3] iuh.fit.controllers.AuthController       : User master logged in successfully
+2025-12-06T20:56:41.115+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2025-12-06T20:56:41.116+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{status=200, message=Đăng nhập thành công, data={accessToken=eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiTUFTVE (truncated)...]
+2025-12-06T20:56:41.118+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-12-06T20:57:00.743+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-4] o.s.web.servlet.DispatcherServlet        : POST "/categories", parameters={}
+2025-12-06T20:57:00.743+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to iuh.fit.controllers.CategoryController#saveCategory(CreateCategoryDTO)
+2025-12-06T20:57:00.745+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-4] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CreateCategoryDTO(name=Books, imageName=books.jpg, description=TestDescription, isActive=true)]
+2025-12-06T20:57:00.778+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2025-12-06T20:57:00.780+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{status=201, data=CategoryDTO(id=65, name=Books, imageName=books.jpg, description=null, isActive=tru (truncated)...]
+2025-12-06T20:57:00.781+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 201 CREATED
+2025-12-06T20:57:58.644+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/categories", parameters={}
+2025-12-06T20:57:58.645+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to iuh.fit.controllers.CategoryController#saveCategory(CreateCategoryDTO)
+2025-12-06T20:57:58.647+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Read "application/json;charset=UTF-8" to [CreateCategoryDTO(name=Sách Tưởng Tượng, imageName=fantasy-books.jpg, description=Những tác phẩm tưở (truncated)...]
+2025-12-06T20:57:58.657+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2025-12-06T20:57:58.658+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{status=201, data=CategoryDTO(id=66, name=Sách Tưởng Tượng, imageName=fantasy-books.jpg, description (truncated)...]
+2025-12-06T20:57:58.659+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [http-nio-8081-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 201 CREATED
+2025-12-06T20:59:11.479+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-12-06T20:59:11.482+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-5] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-06T20:59:11.493+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-12-06T20:59:11.501+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:11.503+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-12-06T20:59:11.507+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-12-06T20:59:11.619+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 22412 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
+2025-12-06T20:59:11.619+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-12-06T20:59:12.049+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06T20:59:12.090+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 7 JPA repository interfaces.
+2025-12-06T20:59:12.326+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-06T20:59:12.327+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-06T20:59:12.327+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-12-06T20:59:12.363+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-06T20:59:12.364+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 742 ms
+2025-12-06T20:59:12.512+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-12-06T20:59:12.557+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06T20:59:12.558+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2025-12-06T20:59:12.572+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.mariadb.jdbc.Connection@4fc02dbc
+2025-12-06T20:59:12.573+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2025-12-06T20:59:13.063+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:13.438+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-06T20:59:13.488+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 55 mappings in 'requestMappingHandlerMapping'
+2025-12-06T20:59:13.517+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-12-06T20:59:13.622+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-12-06T20:59:13.658+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-12-06T20:59:13.659+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-12-06T20:59:13.734+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-06T20:59:13.746+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-06T20:59:13.843+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-12-06T20:59:13.864+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-12-06T20:59:13.873+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Started SpringRestApiQuanLyBanSachApplication in 2.297 seconds (process running for 445.243)
+2025-12-06T20:59:13.923+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-12-06T20:59:15.310+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-12-06T20:59:15.311+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-7] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-06T20:59:15.321+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-12-06T20:59:15.324+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-7] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:15.324+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2025-12-06T20:59:15.328+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2025-12-06T20:59:15.424+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 22412 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
+2025-12-06T20:59:15.424+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-12-06T20:59:15.661+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06T20:59:15.679+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 17 ms. Found 7 JPA repository interfaces.
+2025-12-06T20:59:15.778+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-06T20:59:15.779+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-06T20:59:15.779+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-12-06T20:59:15.794+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-06T20:59:15.794+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 368 ms
+2025-12-06T20:59:15.848+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-12-06T20:59:15.893+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06T20:59:15.894+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2025-12-06T20:59:15.900+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.mariadb.jdbc.Connection@50f8facf
+2025-12-06T20:59:15.900+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2025-12-06T20:59:16.084+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:16.413+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-06T20:59:16.460+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 55 mappings in 'requestMappingHandlerMapping'
+2025-12-06T20:59:16.489+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-12-06T20:59:16.538+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-12-06T20:59:16.566+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-12-06T20:59:16.566+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-12-06T20:59:16.647+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-06T20:59:16.667+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-06T20:59:16.783+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-12-06T20:59:16.803+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-12-06T20:59:16.810+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Started SpringRestApiQuanLyBanSachApplication in 1.415 seconds (process running for 448.181)
+2025-12-06T20:59:16.840+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-12-06T20:59:24.327+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 87 class path changes (0 additions, 86 deletions, 1 modification)
+2025-12-06T20:59:24.335+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-11] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-06T20:59:24.350+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-12-06T20:59:24.357+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-11] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:24.360+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-11] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2025-12-06T20:59:24.368+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-11] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2025-12-06T20:59:24.562+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 22412 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
+2025-12-06T20:59:24.568+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-12-06T20:59:24.941+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06T20:59:24.943+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 0 ms. Found 0 JPA repository interfaces.
+2025-12-06T20:59:25.058+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-06T20:59:25.059+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-06T20:59:25.059+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-12-06T20:59:25.077+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-06T20:59:25.078+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 507 ms
+2025-12-06T20:59:25.110+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-12-06T20:59:25.135+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06T20:59:25.136+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
+2025-12-06T20:59:25.144+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-4 - Added connection org.mariadb.jdbc.Connection@7f89d384
+2025-12-06T20:59:25.145+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
+2025-12-06T20:59:25.159+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:25.261+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-06T20:59:25.379+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 6 mappings in 'requestMappingHandlerMapping'
+2025-12-06T20:59:25.424+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-12-06T20:59:25.433+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-06T20:59:25.450+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-06T20:59:25.601+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: a888c66f-4c00-4645-a426-5e8b794743fc
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-12-06T20:59:25.605+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-12-06T20:59:25.648+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-12-06T20:59:25.741+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-12-06T20:59:25.781+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-12-06T20:59:25.800+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Started SpringRestApiQuanLyBanSachApplication in 1.341 seconds (process running for 457.17)
+2025-12-06T20:59:25.807+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+   JacksonAutoConfiguration.JacksonObjectMapperConfiguration#jacksonObjectMapper matched:
+      - @ConditionalOnMissingBean (types: com.fasterxml.jackson.databind.ObjectMapper; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   ManagementWebSecurityAutoConfiguration matched:
+      - found 'session' scope (OnWebApplicationCondition)
+      - AllNestedConditions 2 matched 0 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) did not find any beans; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
+
+   SpringBootWebSecurityConfiguration.WebSecurityEnablerConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.security.config.annotation.web.configuration.EnableWebSecurity' (OnClassCondition)
+      - @ConditionalOnMissingBean (names: springSecurityFilterChain; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   UserDetailsServiceAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.security.authentication.AuthenticationManager' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - AnyNestedCondition 1 matched 2 did not; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.PasswordConfigured @ConditionalOnProperty (spring.security.user.password) did not find property 'spring.security.user.password'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.NameConfigured @ConditionalOnProperty (spring.security.user.name) did not find property 'spring.security.user.name'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.MissingAlternative @ConditionalOnMissingClass did not find unwanted classes 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository', 'org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector', 'org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository' (UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured)
+      - @ConditionalOnBean (types: org.springframework.security.config.ObjectPostProcessor; SearchStrategy: all) found beans 'objectPostProcessor', 'webAuthorizationManagerPostProcessor', 'filterChainDecoratorPostProcessor', 'authenticationManagerPostProcessor'; @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationManager,org.springframework.security.authentication.AuthenticationProvider,org.springframework.security.core.userdetails.UserDetailsService,org.springframework.security.authentication.AuthenticationManagerResolver,?; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+
+Negative matches:
+-----------------
+
+    None
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2025-12-06T20:59:29.642+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 86 class path changes (86 additions, 0 deletions, 0 modifications)
+2025-12-06T20:59:29.644+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-15] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-06T20:59:29.658+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-12-06T20:59:29.660+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-15] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:29.661+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-15] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Shutdown initiated...
+2025-12-06T20:59:29.664+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [Thread-15] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Shutdown completed.
+2025-12-06T20:59:29.760+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 22412 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
+2025-12-06T20:59:29.761+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-12-06T20:59:30.151+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06T20:59:30.191+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 7 JPA repository interfaces.
+2025-12-06T20:59:30.358+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-06T20:59:30.359+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-06T20:59:30.360+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-12-06T20:59:30.378+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-06T20:59:30.379+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 617 ms
+2025-12-06T20:59:30.444+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-12-06T20:59:30.494+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06T20:59:30.496+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Starting...
+2025-12-06T20:59:30.500+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-5 - Added connection org.mariadb.jdbc.Connection@1e7ce63
+2025-12-06T20:59:30.502+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Start completed.
+2025-12-06T20:59:30.729+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:31.104+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-06T20:59:31.162+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 55 mappings in 'requestMappingHandlerMapping'
+2025-12-06T20:59:31.192+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 26256 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
+2025-12-06T20:59:31.196+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
+2025-12-06T20:59:31.203+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-12-06T20:59:31.234+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-12-06T20:59:31.234+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-12-06T20:59:31.290+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-12-06T20:59:31.337+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-12-06T20:59:31.338+07:00  WARN 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-12-06T20:59:31.480+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-06T20:59:31.509+07:00 DEBUG 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-06T20:59:31.781+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-12-06T20:59:31.803+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2025-12-06T20:59:31.812+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Started SpringRestApiQuanLyBanSachApplication in 2.079 seconds (process running for 463.182)
+2025-12-06T20:59:31.848+07:00  INFO 22412 --- [SpringRestApiQuanLyBanSach] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+    None
+
+
+Negative matches:
+-----------------
+
+   JacksonAutoConfiguration.JacksonObjectMapperConfiguration#jacksonObjectMapper:
+      Did not match:
+         - @ConditionalOnMissingBean (types: com.fasterxml.jackson.databind.ObjectMapper; SearchStrategy: all) found beans of type 'com.fasterxml.jackson.databind.ObjectMapper' objectMapper (OnBeanCondition)
+
+   ManagementWebSecurityAutoConfiguration:
+      Did not match:
+         - AllNestedConditions 1 matched 1 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) found beans of type 'org.springframework.security.web.SecurityFilterChain' filterChain; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
+      Matched:
+         - found 'session' scope (OnWebApplicationCondition)
+
+   SpringBootWebSecurityConfiguration.WebSecurityEnablerConfiguration:
+      Did not match:
+         - @ConditionalOnMissingBean (names: springSecurityFilterChain; SearchStrategy: all) found beans named springSecurityFilterChain (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.security.config.annotation.web.configuration.EnableWebSecurity' (OnClassCondition)
+
+   UserDetailsServiceAutoConfiguration:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationManager,org.springframework.security.authentication.AuthenticationProvider,org.springframework.security.core.userdetails.UserDetailsService,org.springframework.security.authentication.AuthenticationManagerResolver,?; SearchStrategy: all) found beans of type 'org.springframework.security.authentication.AuthenticationManager' authenticationManager and found beans of type 'org.springframework.security.core.userdetails.UserDetailsService' customUserDetailsService and found beans of type 'org.springframework.security.authentication.AuthenticationProvider' authenticationProvider (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.security.authentication.AuthenticationManager' (OnClassCondition)
+         - found 'session' scope (OnWebApplicationCondition)
+         - AnyNestedCondition 1 matched 2 did not; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.PasswordConfigured @ConditionalOnProperty (spring.security.user.password) did not find property 'spring.security.user.password'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.NameConfigured @ConditionalOnProperty (spring.security.user.name) did not find property 'spring.security.user.name'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.MissingAlternative @ConditionalOnMissingClass did not find unwanted classes 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository', 'org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector', 'org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository' (UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured)
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2025-12-06T20:59:32.444+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-06T20:59:32.516+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 7 JPA repository interfaces.
+2025-12-06T20:59:33.017+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2025-12-06T20:59:33.026+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-06T20:59:33.027+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2025-12-06T20:59:33.067+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-06T20:59:33.068+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1832 ms
+2025-12-06T20:59:33.200+07:00 DEBUG 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2025-12-06T20:59:33.598+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-06T20:59:33.645+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-06T20:59:33.748+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@762c62b4
+2025-12-06T20:59:33.750+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-06T20:59:34.848+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:35.076+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-12-06T20:59:37.801+07:00  WARN 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-06T20:59:37.914+07:00 DEBUG 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 55 mappings in 'requestMappingHandlerMapping'
+2025-12-06T20:59:37.959+07:00 DEBUG 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /uploads/**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-12-06T20:59:38.050+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-12-06T20:59:38.098+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-12-06T20:59:38.099+07:00  WARN 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2025-12-06T20:59:38.268+07:00 DEBUG 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-12-06T20:59:38.321+07:00 DEBUG 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-12-06T20:59:38.536+07:00  WARN 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : Unable to start LiveReload server
+2025-12-06T20:59:38.587+07:00  WARN 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-12-06T20:59:38.591+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-06T20:59:38.594+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-12-06T20:59:38.598+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-12-06T20:59:38.614+07:00  INFO 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06T20:59:38.638+07:00 ERROR 26256 --- [SpringRestApiQuanLyBanSach] [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8081 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8081 or configure this application to listen on another port.
+
