@@ -22,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/stats")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('MASTER', 'ADMIN')") // Chỉ ADMIN/MASTER được truy cập
+@PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
 public class StatisticsController {
 
     private final StatisticsService statisticsService;
