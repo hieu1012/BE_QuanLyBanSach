@@ -28,7 +28,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
-    private final OrderService orderService; // Dùng để gọi khi Checkout
+    private final OrderService orderService;
     private final ModelMapper modelMapper;
 
     private Cart findOrCreateCart(User user) {

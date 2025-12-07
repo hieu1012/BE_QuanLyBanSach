@@ -60,24 +60,31 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderAddress(address);
 
         List<OrderItem> items = new ArrayList<>();
+        double calculatedTotalPrice = 0.0; //Tính tổng tiền
+
         for (OrderItemDTO dto : orderDTO.getItems()) {
             Product product = productRepository.findById(dto.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found: " + dto.getProduct().getId()));
 
-            // Optionally check stock:
-            // if (product.getStock() < dto.getQuantity()) throw new RuntimeException("Insufficient stock...");
+            //Luôn lấy giá từ Product trong DB, bỏ qua dto.getPrice()
+            Double currentPrice = product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice();
 
             OrderItem it = new OrderItem();
             it.setProduct(product);
             it.setQuantity(dto.getQuantity());
-            // Prefer using product price (or dto.price if that's business rule)
-            it.setPrice(dto.getPrice() != null ? dto.getPrice() : product.getPrice());
+            it.setPrice(currentPrice); // Set giá từ DB
             it.setOrder(order);
+
             items.add(it);
+
+            // Cộng dồn tổng tiền
+            calculatedTotalPrice += (currentPrice * dto.getQuantity());
         }
 
         order.setItems(items);
-        order.setTotalPrice(orderDTO.getTotalPrice());
+        //Set tổng tiền do backend tính toán
+        order.setTotalPrice(calculatedTotalPrice);
+
         Order saved = orderRepository.save(order);
         return modelMapper.map(saved, OrderDTO.class);
     }
@@ -163,8 +170,39 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void deleteOrder(Integer id){
-        orderRepository.deleteById(id);
+    public OrderDTO requestCancelOrder(Integer orderId, User currentUser, String reason) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ItemNotFoundException("Đơn hàng không tồn tại"));
+
+        // Kiểm tra quyền sở hữu
+        if (!order.getUser().getId().equals(currentUser.getId())) {
+            throw new ForbiddenException("Bạn không có quyền hủy đơn hàng này");
+        }
+
+        // Chỉ cho phép hủy khi đơn ở trạng thái PENDING hoặc PROCESSING
+        if (order.getStatus() != OrderStatus.PENDING && order.getStatus() != OrderStatus.PROCESSING) {
+            throw new RuntimeException("Không thể hủy đơn hàng đang giao hoặc đã hoàn tất");
+        }
+
+        order.setStatus(OrderStatus.CANCEL_REQUESTED); // Chuyển trạng thái chờ duyệt
+        order.setCancelReason(reason); // Lưu lý do
+
+        Order saved = orderRepository.save(order);
+        return modelMapper.map(saved, OrderDTO.class);
+    }
+
+    //Admin hủy/duyệt hủy
+    @Override
+    @Transactional
+    public OrderDTO deleteOrder(Integer id){
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Order Not Found"));
+
+        // Thay vì xóa cứng (deleteById), ta chuyển trạng thái thành CANCELLED
+        order.setStatus(OrderStatus.CANCELLED);
+
+        Order saved = orderRepository.save(order);
+        return modelMapper.map(saved, OrderDTO.class);
     }
 
     @Override

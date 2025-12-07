@@ -1,3 +1,9 @@
+2025-12-05T00:21:38.686+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-05T00:21:38.699+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-12-05T00:21:38.705+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-05T00:21:38.707+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown initiated...
+2025-12-05T00:21:38.710+07:00  INFO 7912 --- [SpringRestApiQuanLyBanSach] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown completed.
+=======
 2025-12-06T20:50:37.779+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : Starting SpringRestApiQuanLyBanSachApplication using Java 21.0.1 with PID 3852 (E:\BE_QuanLyBanSach\target\classes started by LENOVO in E:\BE_QuanLyBanSach)
 2025-12-06T20:50:37.785+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .f.SpringRestApiQuanLyBanSachApplication : No active profile set, falling back to 1 default profile: "default"
 2025-12-06T20:50:37.826+07:00  INFO 3852 --- [SpringRestApiQuanLyBanSach] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable

@@ -40,6 +40,9 @@ public class Order {
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
+    @Column(name = "cancel_reason", length = 500)
+    private String cancelReason;
+
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_address_id", nullable = false)
