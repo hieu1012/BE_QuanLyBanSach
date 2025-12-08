@@ -42,15 +42,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDTO convertToDTO(Product product) {
         ProductDTO dto = modelMapper.map(product, ProductDTO.class);
         // Chuyển đổi imageNames từ JSON string thành List
-        List<String> imageNames = convertJsonStringToList(product.getImageNames());
-        dto.setImageNames(imageNames);
-        
-        // Tạo imageUrls từ imageNames
-        List<String> imageUrls = imageNames.stream()
-                .map(name -> "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/" + name)
-                .collect(Collectors.toList());
-        dto.setImageUrls(imageUrls);
-        
+        dto.setImageNames(convertJsonStringToList(product.getImageNames()));
         return dto;
     }
 

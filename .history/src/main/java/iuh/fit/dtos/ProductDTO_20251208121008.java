@@ -17,7 +17,7 @@ public class ProductDTO {
     private Double discountPrice;
     private Integer discount;
     private Integer stock;
-    // @JsonIgnore
+    @JsonIgnore
     private List<String> imageNames; // JSON array của tên ảnh (public_id) - ẩn khỏi response
     private List<String> imageUrls; // URL đầy đủ của ảnh
     private Boolean isActive;

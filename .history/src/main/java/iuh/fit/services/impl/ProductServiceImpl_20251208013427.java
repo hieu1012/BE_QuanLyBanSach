@@ -42,15 +42,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDTO convertToDTO(Product product) {
         ProductDTO dto = modelMapper.map(product, ProductDTO.class);
         // Chuyển đổi imageNames từ JSON string thành List
-        List<String> imageNames = convertJsonStringToList(product.getImageNames());
-        dto.setImageNames(imageNames);
-        
-        // Tạo imageUrls từ imageNames
-        List<String> imageUrls = imageNames.stream()
-                .map(name -> "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/" + name)
-                .collect(Collectors.toList());
-        dto.setImageUrls(imageUrls);
-        
+        dto.setImageNames(convertJsonStringToList(product.getImageNames()));
         return dto;
     }
 
@@ -276,7 +268,7 @@ public class ProductServiceImpl implements ProductService {
         // Upload ảnh nếu có
         List<String> uploadedImages = new ArrayList<>();
         if (images != null && images.length > 0) {
-            uploadedImages = cloudinaryService.uploadMultipleFiles(images);
+            uploadedImages = fileUploadUtil.uploadMultipleFiles(images);
         }
 
         // Tạo sản phẩm
@@ -334,7 +326,7 @@ public class ProductServiceImpl implements ProductService {
 
         // Xử lý ảnh
         if (images != null && images.length > 0) {
-            List<String> newImages = cloudinaryService.uploadMultipleFiles(images);
+            List<String> newImages = fileUploadUtil.uploadMultipleFiles(images);
             
             if (keepExistingImages != null && keepExistingImages) {
                 // Giữ ảnh cũ, thêm ảnh mới
@@ -344,7 +336,7 @@ public class ProductServiceImpl implements ProductService {
             } else {
                 // Xóa ảnh cũ, thêm ảnh mới
                 List<String> oldImages = convertJsonStringToList(product.getImageNames());
-                cloudinaryService.deleteMultipleFiles(oldImages);
+                fileUploadUtil.deleteMultipleFiles(oldImages);
                 product.setImageNames(convertListToJsonString(newImages));
             }
         }
@@ -358,6 +350,30 @@ public class ProductServiceImpl implements ProductService {
             Map<String, Object> errors = new LinkedHashMap<>();
             violations.forEach(v -> errors.put(v.getPropertyPath().toString(), v.getMessage()));
             throw new ValidationException("Có lỗi khi cập nhật sản phẩm!", errors);
+        }
+
+        productRepository.save(product);
+        return convertToDTO(product);
+    }
+
+    @Transactional
+    @Override
+    public ProductDTO uploadProductImages(int id, MultipartFile[] images, Boolean replaceExisting) throws IOException {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm có ID: " + id));
+
+        List<String> newImages = fileUploadUtil.uploadMultipleFiles(images);
+
+        if (replaceExisting != null && replaceExisting) {
+            // Xóa ảnh cũ
+            List<String> oldImages = convertJsonStringToList(product.getImageNames());
+            fileUploadUtil.deleteMultipleFiles(oldImages);
+            product.setImageNames(convertListToJsonString(newImages));
+        } else {
+            // Thêm ảnh mới vào ảnh cũ
+            List<String> existingImages = convertJsonStringToList(product.getImageNames());
+            existingImages.addAll(newImages);
+            product.setImageNames(convertListToJsonString(existingImages));
         }
 
         productRepository.save(product);
@@ -390,6 +406,35 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public ProductDTO deleteProductImages(int id, List<String> fileNames) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm có ID: " + id));
+        
+        if (fileNames == null || fileNames.isEmpty()) {
+            return convertToDTO(product);
+        }
+        
+        // Lấy danh sách ảnh hiện tại
+        List<String> currentImages = convertJsonStringToList(product.getImageNames());
+        
+        // Xóa các file từ hệ thống và danh sách
+        for (String fileName : fileNames) {
+            try {
+                fileUploadUtil.deleteFile(fileName);
+                currentImages.remove(fileName);
+            } catch (Exception e) {
+                // Log nhưng tiếp tục xóa file khác
+            }
+        }
+        
+        // Cập nhật danh sách ảnh
+        product.setImageNames(convertListToJsonString(currentImages));
+        productRepository.save(product);
+        
+        return convertToDTO(product);
     }
 
 }

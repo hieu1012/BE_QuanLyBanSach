@@ -42,15 +42,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductDTO convertToDTO(Product product) {
         ProductDTO dto = modelMapper.map(product, ProductDTO.class);
         // Chuyển đổi imageNames từ JSON string thành List
-        List<String> imageNames = convertJsonStringToList(product.getImageNames());
-        dto.setImageNames(imageNames);
-        
-        // Tạo imageUrls từ imageNames
-        List<String> imageUrls = imageNames.stream()
-                .map(name -> "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/" + name)
-                .collect(Collectors.toList());
-        dto.setImageUrls(imageUrls);
-        
+        dto.setImageNames(convertJsonStringToList(product.getImageNames()));
         return dto;
     }
 
@@ -364,6 +356,30 @@ public class ProductServiceImpl implements ProductService {
         return convertToDTO(product);
     }
 
+    @Transactional
+    @Override
+    public ProductDTO uploadProductImages(int id, MultipartFile[] images, Boolean replaceExisting) throws IOException {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm có ID: " + id));
+
+        List<String> newImages = cloudinaryService.uploadMultipleFiles(images);
+
+        if (replaceExisting != null && replaceExisting) {
+            // Xóa ảnh cũ
+            List<String> oldImages = convertJsonStringToList(product.getImageNames());
+            cloudinaryService.deleteMultipleFiles(oldImages);
+            product.setImageNames(convertListToJsonString(newImages));
+        } else {
+            // Thêm ảnh mới vào ảnh cũ
+            List<String> existingImages = convertJsonStringToList(product.getImageNames());
+            existingImages.addAll(newImages);
+            product.setImageNames(convertListToJsonString(existingImages));
+        }
+
+        productRepository.save(product);
+        return convertToDTO(product);
+    }
+
     /**
      * Convert List<String> to JSON string
      */
@@ -390,6 +406,35 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public ProductDTO deleteProductImages(int id, List<String> publicIds) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm có ID: " + id));
+        
+        if (publicIds == null || publicIds.isEmpty()) {
+            return convertToDTO(product);
+        }
+        
+        // Lấy danh sách ảnh hiện tại
+        List<String> currentImages = convertJsonStringToList(product.getImageNames());
+        
+        // Xóa các file từ Cloudinary và danh sách
+        for (String publicId : publicIds) {
+            try {
+                cloudinaryService.deleteFile(publicId);
+                currentImages.remove(publicId);
+            } catch (Exception e) {
+                // Log nhưng tiếp tục xóa file khác
+            }
+        }
+        
+        // Cập nhật danh sách ảnh
+        product.setImageNames(convertListToJsonString(currentImages));
+        productRepository.save(product);
+        
+        return convertToDTO(product);
     }
 
 }
