@@ -212,32 +212,63 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order Not Found"));
 
-        // Cập nhật địa chỉ giao hàng
+        // 1. Cập nhật địa chỉ giao hàng
         if (orderDTO.getOrderAddress() != null) {
-            modelMapper.map(orderDTO.getOrderAddress(), order.getOrderAddress());
+            if (order.getOrderAddress() == null) {
+                // Nếu chưa có địa chỉ, tạo mới (ModelMapper map ID null thì Hibernate sẽ tự gen ID mới -> OK)
+                OrderAddress newAddress = modelMapper.map(orderDTO.getOrderAddress(), OrderAddress.class);
+                order.setOrderAddress(newAddress);
+            } else {
+                // [SỬA LỖI TẠI ĐÂY]
+                // Không dùng modelMapper.map() trực tiếp để tránh bị ghi đè ID thành null
+                // Ta cập nhật thủ công các trường thông tin
+                var newAddrInfo = orderDTO.getOrderAddress();
+                var currentAddr = order.getOrderAddress();
+
+                currentAddr.setFirstName(newAddrInfo.getFirstName());
+                currentAddr.setLastName(newAddrInfo.getLastName());
+                currentAddr.setAddress(newAddrInfo.getAddress());
+                currentAddr.setCity(newAddrInfo.getCity());
+                currentAddr.setState(newAddrInfo.getState());
+                currentAddr.setPincode(newAddrInfo.getPincode());
+                currentAddr.setMobileNo(newAddrInfo.getMobileNo());
+                currentAddr.setEmail(newAddrInfo.getEmail());
+                // TUYỆT ĐỐI KHÔNG SET ID
+            }
         }
 
-        // Cập nhật payment type
+        // 2. Cập nhật payment type
         if (orderDTO.getPaymentType() != null) {
             order.setPaymentType(orderDTO.getPaymentType());
         }
 
-        // Cập nhật trạng thái đơn hàng
+        // 3. Cập nhật trạng thái đơn hàng
         if (orderDTO.getStatus() != null) {
             order.setStatus(orderDTO.getStatus());
         }
 
-        // Cập nhật items
+        // 4. Cập nhật items
         if (orderDTO.getItems() != null) {
+            // Xóa items cũ (orphanRemoval = true trong Entity sẽ giúp xóa khỏi DB)
             order.getItems().clear();
-            orderDTO.getItems().forEach(dto -> {
-                var item = modelMapper.map(dto, OrderItem.class);
-                item.setOrder(order);
-                order.getItems().add(item);
-            });
+
+            // Thêm items mới
+            List<OrderItem> newItems = new ArrayList<>();
+            for (var dto : orderDTO.getItems()) {
+                Product product = productRepository.findById(dto.getProduct().getId())
+                        .orElseThrow(() -> new RuntimeException("Product not found"));
+
+                OrderItem item = new OrderItem();
+                item.setProduct(product);
+                item.setQuantity(dto.getQuantity());
+                item.setPrice(dto.getPrice());
+                item.setOrder(order); // Quan trọng
+                newItems.add(item);
+            }
+            order.getItems().addAll(newItems);
         }
 
-        // Cập nhật tổng đơn
+        // 5. Cập nhật tổng đơn
         if (orderDTO.getTotalPrice() != null) {
             order.setTotalPrice(orderDTO.getTotalPrice());
         }
@@ -245,6 +276,8 @@ public class OrderServiceImpl implements OrderService {
         Order updated = orderRepository.save(order);
         return modelMapper.map(updated, OrderDTO.class);
     }
+
+
     //Lấy chi tiết đơn hàng, kiểm tra User có phải là chủ đơn hàng không
     @Override
     @Transactional(readOnly = true)
@@ -304,7 +337,6 @@ public class OrderServiceImpl implements OrderService {
         // 3. Chuyển Cart Items thành Order Items
         List<OrderItem> items = new ArrayList<>();
         for (CartItem cartItem : cart.getItems()) {
-            // Kiểm tra stock ở đây (nếu cần)
 
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(cartItem.getProduct());
