@@ -259,7 +259,6 @@ INSERT IGNORE INTO order_addresses (first_name, last_name, email, mobile_no, add
 
 
 -- =====================================================
-<<<<<<< Updated upstream
 -- 5 & 6. INSERT DATA VÀO BẢNG ORDERS & ORDER_ITEMS
 -- Tăng đơn DELIVERED để có dữ liệu thống kê tốt hơn
 -- =====================================================
@@ -308,7 +307,6 @@ INSERT INTO orders (order_id, order_date, status, payment_type, total_price, ord
     ('ORD-20251203-004', NOW(), 'PENDING', 'COD', 112000.00, LAST_INSERT_ID(), 4);
 INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
     (LAST_INSERT_ID(), 17, 1, 112000.00);
-=======
 -- 5. INSERT DATA VÀO BẢNG ORDERS
 -- Ghi chú: order_address_id: 1, 2, 3
 -- user_id: 3 (customer01), 4 (customer02)
@@ -360,8 +358,6 @@ INSERT IGNORE INTO order_items (order_id, product_id, quantity, price) VALUES
 INSERT IGNORE INTO order_items (order_id, product_id, quantity, price) VALUES
     (5, 4, 1, 100000.00);
 
->>>>>>> Stashed changes
-
 -- =====================================================
 -- SCRIPT EXECUTION COMPLETE
 -- =====================================================
@@ -375,44 +371,37 @@ SELECT * FROM order_items;
 -- 7. INSERT DATA VÀO BẢNG CARTS và CART_ITEMS
 -- =====================================================
 
-<<<<<<< Updated upstream
--- Xóa dữ liệu cũ trước khi chèn lại
-DELETE FROM cart_items;
-DELETE FROM carts;
+-- Xóa dữ liệu cũ trước khi chèn lại để tránh lỗi Duplicate
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE cart_items;
+TRUNCATE TABLE carts;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- Reset Auto Increment (tùy chọn, để ID bắt đầu từ 1)
 ALTER TABLE carts AUTO_INCREMENT = 1;
 ALTER TABLE cart_items AUTO_INCREMENT = 1;
 
--- **Giỏ hàng 1: customer01 (ID=3)**
--- Items: Sách 15 (124k) * 1 + Sách 16 (108k) * 1 = 232000.00
+-- -----------------------------------------------------
+-- 1. Tạo Giỏ hàng cho customer01 (ID=3)
+-- Items dự kiến: Sách 15, 16, 17. Tổng tiền: 344,000
+-- -----------------------------------------------------
 INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
-    (3, 232000.00, NOW(), NOW());
+    (3, 344000.00, NOW(), NOW());
+
+-- Thêm items vào giỏ hàng 1 (Lấy ID vừa tạo là 1)
 INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
                                                                        (1, 15, 1, 124000.00), -- Sức Khỏe Tâm Thần
-                                                                       (1, 16, 1, 108000.00); -- Tự Tin Và Tự Yêu Bản Thân
+                                                                       (1, 16, 1, 108000.00), -- Tự Tin Và Tự Yêu Bản Thân
+                                                                       (1, 17, 1, 112000.00); -- Điều Khiển Cảm Xúc (thêm vào sau)
 
--- **Giỏ hàng 2: customer02 (ID=4)**
--- Items: Sách 10 (132k) * 1
-INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
-=======
--- 1. Tạo Giỏ hàng cho customer01 (ID=3)
-INSERT IGNORE INTO carts (user_id, total_amount, created_at, updated_at) VALUES
-    (3, 308000.00, NOW(), NOW());
 
+-- -----------------------------------------------------
 -- 2. Tạo Giỏ hàng cho customer02 (ID=4)
-INSERT IGNORE INTO carts (user_id, total_amount, created_at, updated_at) VALUES
->>>>>>> Stashed changes
+-- Items dự kiến: Sách 10. Tổng tiền: 132,000
+-- -----------------------------------------------------
+INSERT INTO carts (user_id, total_amount, created_at, updated_at) VALUES
     (4, 132000.00, NOW(), NOW());
+
+-- Thêm items vào giỏ hàng 2 (Lấy ID vừa tạo là 2)
 INSERT INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
     (2, 10, 1, 132000.00); -- Chiến Lược Marketing Hiệu Quả
-
-UPDATE carts SET total_amount = 344000.00 WHERE id = 1;
-
-INSERT IGNORE INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
-                                                                       (1, 15, 1, 124000.00),
-                                                                       (1, 16, 1, 108000.00),
-                                                                       (1, 17, 1, 112000.00);
-
--- Items cho customer02 (ID=4, Cart ID=2): Total 132,000
--- Sách 10 (Chiến Lược Marketing Hiệu Quả - 132k) * 1
-INSERT IGNORE INTO cart_items (cart_id, product_id, quantity, unit_price) VALUES
-    (2, 10, 1, 132000.00);

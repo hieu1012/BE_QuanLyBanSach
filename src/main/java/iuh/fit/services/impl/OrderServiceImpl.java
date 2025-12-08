@@ -337,7 +337,6 @@ public class OrderServiceImpl implements OrderService {
         // 3. Chuyển Cart Items thành Order Items
         List<OrderItem> items = new ArrayList<>();
         for (CartItem cartItem : cart.getItems()) {
-            // Kiểm tra stock ở đây (nếu cần)
 
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(cartItem.getProduct());
