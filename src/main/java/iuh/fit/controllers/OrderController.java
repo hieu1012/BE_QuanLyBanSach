@@ -1,5 +1,6 @@
 package iuh.fit.controllers;
 
+import iuh.fit.dtos.order.CancelOrderRequest;
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
 import iuh.fit.entities.User;
@@ -7,6 +8,7 @@ import iuh.fit.entities.enums.OrderStatus;
 import iuh.fit.exceptions.UnauthorizedException;
 import iuh.fit.repositories.UserRepository;
 import iuh.fit.services.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -82,6 +86,24 @@ public class OrderController {
         User currentUser = getCurrentUser();
         // Logic kiểm tra quyền được chuyển vào Service
         return ResponseEntity.ok(orderService.findOrderByIdForUser(id, currentUser));
+    }
+
+    //User yêu cầu hủy đơn hàng
+    @PostMapping("/{id}/cancel")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'MASTER')")
+    public ResponseEntity<Map<String, Object>> requestCancelOrder(
+            @PathVariable Integer id,
+            @Valid @RequestBody CancelOrderRequest request) { // Nhận JSON chứa lý do
+
+        User currentUser = getCurrentUser();
+        OrderDTO cancelledOrder = orderService.requestCancelOrder(id, currentUser, request.getReason());
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("message", "Đã gửi yêu cầu hủy đơn hàng. Vui lòng chờ Admin duyệt.");
+        response.put("data", cancelledOrder);
+
+        return ResponseEntity.ok(response);
     }
 
 }
