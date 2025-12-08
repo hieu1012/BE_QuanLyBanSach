@@ -3,7 +3,6 @@ package iuh.fit.services.impl;
 import iuh.fit.dtos.StatisticsDTO;
 import iuh.fit.repositories.OrderItemRepository;
 import iuh.fit.repositories.OrderRepository;
-import iuh.fit.repositories.UserRepository;
 import iuh.fit.services.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,7 +23,14 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final UserRepository userRepository;
+    
+    private Double safeDouble(Object value) {
+        return value != null ? ((Number) value).doubleValue() : 0.0;
+    }
+
+    private Long safeLong(Object value) {
+        return value != null ? ((Number) value).longValue() : 0L;
+    }
 
     @Override
     public List<StatisticsDTO> getStatsByDay(LocalDate startDate, LocalDate endDate) {
@@ -36,13 +41,23 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         return results.stream()
                 .map(row -> {
-                    LocalDate date = (LocalDate) row[0];
-                    Double revenue = ((BigDecimal) row[1]).doubleValue();
-                    Long orders = (Long) row[2];
+                    // row[0] là Date (SQL Date hoặc Timestamp)
+                    // row[1] là SUM(totalPrice) -> Double/BigDecimal
+                    // row[2] là COUNT(id) -> Long/BigInteger
+
+                    LocalDate date;
+                    if (row[0] instanceof java.sql.Date) {
+                        date = ((java.sql.Date) row[0]).toLocalDate();
+                    } else if (row[0] instanceof java.sql.Timestamp) {
+                        date = ((java.sql.Timestamp) row[0]).toLocalDateTime().toLocalDate();
+                    } else {
+                        date = LocalDate.parse(row[0].toString());
+                    }
+
                     return StatisticsDTO.builder()
                             .date(date)
-                            .totalRevenue(revenue)
-                            .totalOrders(orders)
+                            .totalRevenue(safeDouble(row[1]))
+                            .totalOrders(safeLong(row[2]))
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -54,14 +69,13 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         return results.stream()
                 .map(row -> {
-                    Integer month = (Integer) row[0];
-                    Integer y = (Integer) row[1];
-                    Double revenue = ((BigDecimal) row[2]).doubleValue();
-                    Long orders = (Long) row[3];
+                    Integer month = safeLong(row[0]).intValue();
+                    Integer y = safeLong(row[1]).intValue();
+
                     return StatisticsDTO.builder()
                             .name(Month.of(month).name() + "/" + y)
-                            .totalRevenue(revenue)
-                            .totalOrders(orders)
+                            .totalRevenue(safeDouble(row[2]))
+                            .totalOrders(safeLong(row[3]))
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -73,15 +87,13 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         List<StatisticsDTO> customerStats = results.stream()
                 .map(row -> {
-                    // Long id = (Long) row[0]; // ID User
+                    // row[0]: user_id, row[1]: fullName
                     String fullName = (String) row[1];
-                    Long count = (Long) row[2];
-                    Double totalValue = ((BigDecimal) row[3]).doubleValue();
 
                     return StatisticsDTO.builder()
                             .name(fullName)
-                            .count(count)
-                            .totalValue(totalValue)
+                            .count(safeLong(row[2]))
+                            .totalValue(safeDouble(row[3]))
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -94,14 +106,13 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         List<StatisticsDTO> productStats = results.stream()
                 .map(row -> {
+                    // row[0]: title
                     String title = (String) row[0];
-                    Long count = (Long) row[1];
-                    Double totalValue = ((BigDecimal) row[2]).doubleValue();
 
                     return StatisticsDTO.builder()
                             .name(title)
-                            .count(count)
-                            .totalValue(totalValue)
+                            .count(safeLong(row[1]))
+                            .totalValue(safeDouble(row[2]))
                             .build();
                 })
                 .collect(Collectors.toList());

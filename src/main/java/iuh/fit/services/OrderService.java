@@ -35,10 +35,10 @@ public interface OrderService {
     //Cập nhật trạng thái đơn hàng (admin)
     OrderDTO updateOrderStatus(Integer orderId, OrderStatus newStatus);
 
-    //User yêu cầu hủy đơn
-    OrderDTO requestCancelOrder(Integer orderId, User currentUser, String reason);
+    //User hủy đơn hàng
+    OrderDTO cancelOrderByUser(Integer orderId, User currentUser);
 
-    // Xóa đơn hàng
+    // Xóa đơn hàng(admin)
     OrderDTO deleteOrder(Integer id);
 
     // Cập nhật toàn bộ đơn hàng (dành cho Admin)

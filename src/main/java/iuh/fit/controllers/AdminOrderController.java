@@ -1,12 +1,9 @@
 package iuh.fit.controllers;
 
-import iuh.fit.dtos.admin.AdminCreateUserRequest;
-import iuh.fit.dtos.admin.AdminUpdateUserRequest;
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
 import iuh.fit.entities.User;
 import iuh.fit.entities.enums.OrderStatus;
-import iuh.fit.exceptions.ItemNotFoundException;
 import iuh.fit.exceptions.UnauthorizedException;
 import iuh.fit.repositories.UserRepository;
 import iuh.fit.services.OrderService;
@@ -28,13 +25,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/orders")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN', 'MASTER')") // Đảm bảo annotation này đúng
+@PreAuthorize("hasAnyRole('ADMIN', 'MASTER')")
 public class AdminOrderController {
 
     private final OrderService orderService;
-    private final UserRepository userRepository; // [MỚI] Cần để lấy User hiện tại
+    private final UserRepository userRepository;
 
-    // [MỚI] Helper function để lấy User từ Token
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -45,48 +41,65 @@ public class AdminOrderController {
                 .orElseThrow(() -> new UnauthorizedException("User không tồn tại"));
     }
 
-    //Cập nhật đơn (Admin) - PUT
+    // Cập nhật đơn hàng (Admin)
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrderAdmin(
+    public ResponseEntity<Map<String, Object>> updateOrderAdmin(
             @PathVariable Integer id,
             @RequestBody OrderDTO orderDTO) {
-        // endpoint này không dùng currentUser trong logic service cũ,
-        // nhưng @PreAuthorize sẽ chặn nếu role sai.
-        return ResponseEntity.ok(orderService.updateOrderAdmin(id, orderDTO));
-    }
 
-    // Cập nhật trạng thái đơn hàng - PUT
-    @PutMapping("/{id}/status")
-    public ResponseEntity<OrderDTO> updateStatus(@PathVariable Integer id, @RequestParam OrderStatus newStatus) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, newStatus));
-    }
+        OrderDTO updatedOrder = orderService.updateOrderAdmin(id, orderDTO);
 
-    // Xóa đơn hàng - DELETE
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteOrder(@PathVariable Integer id) {
-        OrderDTO cancelledOrder = orderService.deleteOrder(id);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Đã hủy đơn hàng thành công (Admin action)");
-        response.put("data", cancelledOrder);
+        response.put("message", "Cập nhật thông tin đơn hàng thành công");
+        response.put("data", updatedOrder);
         return ResponseEntity.ok(response);
     }
 
-    // GET /admin/orders
+    // Cập nhật trạng thái đơn hàng
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Map<String, Object>> updateStatus(
+            @PathVariable Integer id,
+            @RequestParam OrderStatus newStatus) {
+
+        OrderDTO updatedOrder = orderService.updateOrderStatus(id, newStatus);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("message", "Cập nhật trạng thái đơn hàng thành công: " + newStatus);
+        response.put("data", updatedOrder);
+        return ResponseEntity.ok(response);
+    }
+
+    // Xóa đơn hàng
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteOrder(@PathVariable Integer id) {
+        OrderDTO deletedOrder = orderService.deleteOrder(id);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("message", "Đã xóa vĩnh viễn đơn hàng và hoàn lại tồn kho thành công");
+        response.put("data", deletedOrder);
+        return ResponseEntity.ok(response);
+    }
+
+    // Lấy danh sách (Admin)
     @GetMapping
-    public ResponseEntity<Page<OrderSummaryDTO>> getOrdersByFilter(
+    public ResponseEntity<Map<String, Object>> getOrdersByFilter(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) OrderStatus status,
             @RequestParam(required = false) LocalDateTime startDate,
             @RequestParam(required = false) LocalDateTime endDate,
             @ParameterObject Pageable pageable) {
 
-        // [SỬA LỖI] Lấy user hiện tại thay vì truyền null
         User currentUser = getCurrentUser();
-
         Page<OrderSummaryDTO> orders = orderService.getOrdersByFilter(
                 currentUser, keyword, status, startDate, endDate, pageable);
 
-        return ResponseEntity.ok(orders);
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", HttpStatus.OK.value());
+        response.put("message", "Lấy danh sách đơn hàng (Admin) thành công");
+        response.put("data", orders);
+        return ResponseEntity.ok(response);
     }
 }
