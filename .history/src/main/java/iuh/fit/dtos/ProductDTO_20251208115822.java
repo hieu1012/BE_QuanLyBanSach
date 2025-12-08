@@ -1,6 +1,5 @@
 package iuh.fit.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +16,7 @@ public class ProductDTO {
     private Double discountPrice;
     private Integer discount;
     private Integer stock;
-    // @JsonIgnore
-    private List<String> imageNames; // JSON array của tên ảnh (public_id) - ẩn khỏi response
+    private List<String> imageNames; // JSON array của tên ảnh (public_id)
     private List<String> imageUrls; // URL đầy đủ của ảnh
     private Boolean isActive;
 
