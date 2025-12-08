@@ -29,22 +29,17 @@ public class CartController {
     private final CartService cartService;
     private final UserRepository userRepository;
 
-    /**
-     * Lấy user hiện tại từ Security Context
-     */
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new UnauthorizedException("Vui lòng đăng nhập");
         }
-
         String username = authentication.getName();
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UnauthorizedException("User không tồn tại"));
     }
 
-    //Giỏ hàng
+    // Lấy giỏ hàng
     @GetMapping
     public ResponseEntity<Map<String, Object>> getCart() {
         User currentUser = getCurrentUser();
@@ -52,12 +47,12 @@ public class CartController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Lấy giỏ hàng thành công");
+        response.put("message", "Lấy thông tin giỏ hàng thành công");
         response.put("data", cart);
         return ResponseEntity.ok(response);
     }
 
-    //Thêm vào giỏ
+    // Thêm vào giỏ
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addToCart(
             @Valid @RequestBody AddToCartRequest request) {
@@ -66,28 +61,26 @@ public class CartController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Thêm sản phẩm vào giỏ hàng thành công");
+        response.put("message", "Đã thêm sản phẩm vào giỏ hàng");
         response.put("data", cart);
         return ResponseEntity.ok(response);
     }
 
-    //Cập nhật giỏ hàng
+    // Cập nhật số lượng
     @PutMapping("/update")
     public ResponseEntity<Map<String, Object>> updateCartItem(
             @Valid @RequestBody AddToCartRequest request) {
         User currentUser = getCurrentUser();
-        // Dùng updateItemQuantity trong Service
         CartDTO cart = cartService.updateItemQuantity(currentUser, request.getProductId(), request.getQuantity());
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Cập nhật số lượng sản phẩm trong giỏ hàng thành công");
+        response.put("message", "Cập nhật số lượng sản phẩm thành công");
         response.put("data", cart);
         return ResponseEntity.ok(response);
     }
 
-
-    //Xóa sản phẩm khỏi giỏ
+    // Xóa khỏi giỏ
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<Map<String, Object>> removeCartItem(@PathVariable("id") Integer productId) {
         User currentUser = getCurrentUser();
@@ -95,30 +88,23 @@ public class CartController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Xóa sản phẩm khỏi giỏ hàng thành công");
+        response.put("message", "Đã xóa sản phẩm khỏi giỏ hàng");
         response.put("data", cart);
         return ResponseEntity.ok(response);
     }
 
-    //Thanh toán
+    // Thanh toán
     @PostMapping("/checkout")
     public ResponseEntity<Map<String, Object>> checkout(
             @Valid @RequestBody CheckoutRequest request) {
 
         User currentUser = getCurrentUser();
-
-        // Gọi service với CheckoutRequest, service sẽ trả về OrderDTO mới tạo
         OrderDTO newOrder = cartService.checkout(currentUser, request);
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.CREATED.value());
-
-        // Cập nhật thông báo
-        response.put("message", "Thanh toán thành công! Đơn hàng mới đã được tạo.");
-
-        // Trả về OrderDTO
+        response.put("message", "Thanh toán thành công! Đơn hàng đã được tạo.");
         response.put("data", newOrder);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

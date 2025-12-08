@@ -37,7 +37,7 @@ public class StatisticsController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Thống kê theo ngày thành công");
+        response.put("message", "Lấy thống kê theo ngày thành công");
         response.put("data", result);
         return ResponseEntity.ok(response);
     }
@@ -51,7 +51,7 @@ public class StatisticsController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Thống kê theo tháng thành công");
+        response.put("message", "Lấy thống kê theo tháng thành công");
         response.put("data", result);
         return ResponseEntity.ok(response);
     }
@@ -65,7 +65,7 @@ public class StatisticsController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Thống kê khách hàng top thành công");
+        response.put("message", "Lấy danh sách khách hàng hàng đầu thành công");
         response.put("data", result);
         return ResponseEntity.ok(response);
     }
@@ -79,7 +79,7 @@ public class StatisticsController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.OK.value());
-        response.put("message", "Thống kê sản phẩm bán chạy thành công");
+        response.put("message", "Lấy danh sách sản phẩm bán chạy thành công");
         response.put("data", result);
         return ResponseEntity.ok(response);
     }

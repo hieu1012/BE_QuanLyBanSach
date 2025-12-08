@@ -168,9 +168,25 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(updated, OrderDTO.class);
     }
 
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getItems()) {
+            // Lấy lại sản phẩm từ DB (đảm bảo tính mới nhất)
+            Product product = productRepository.findById(item.getProduct().getId())
+                    .orElse(null); // Không nên ném lỗi ở đây, chỉ ghi log nếu sản phẩm bị xóa
+
+            if (product != null) {
+                // Hoàn lại số lượng
+                product.setStock(product.getStock() + item.getQuantity());
+                productRepository.save(product);
+                // Ghi log (trong môi trường thực tế)
+                System.out.println("Đã hoàn lại tồn kho cho Product ID: " + product.getId() + ", Quantity: " + item.getQuantity());
+            }
+        }
+    }
+
     @Override
     @Transactional
-    public OrderDTO requestCancelOrder(Integer orderId, User currentUser, String reason) {
+    public OrderDTO cancelOrderByUser(Integer orderId, User currentUser) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ItemNotFoundException("Đơn hàng không tồn tại"));
 
@@ -179,30 +195,37 @@ public class OrderServiceImpl implements OrderService {
             throw new ForbiddenException("Bạn không có quyền hủy đơn hàng này");
         }
 
-        // Chỉ cho phép hủy khi đơn ở trạng thái PENDING hoặc PROCESSING
-        if (order.getStatus() != OrderStatus.PENDING && order.getStatus() != OrderStatus.PROCESSING) {
-            throw new RuntimeException("Không thể hủy đơn hàng đang giao hoặc đã hoàn tất");
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new RuntimeException("Chỉ có thể hủy đơn hàng đang chờ xử lý (PENDING)");
         }
 
-        order.setStatus(OrderStatus.CANCEL_REQUESTED); // Chuyển trạng thái chờ duyệt
-        order.setCancelReason(reason); // Lưu lý do
+        order.setStatus(OrderStatus.CANCELLED);
+
+        // BƯỚC 1: Hoàn lại tồn kho
+        restoreStock(order);
+
+        // BƯỚC 2: Chuyển trạng thái thành CANCELLED
+        order.setStatus(OrderStatus.CANCELLED);
 
         Order saved = orderRepository.save(order);
         return modelMapper.map(saved, OrderDTO.class);
     }
 
-    //Admin hủy/duyệt hủy
+    //Xóa đơn hàng (Admin)
     @Override
     @Transactional
     public OrderDTO deleteOrder(Integer id){
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException("Order Not Found"));
+                .orElseThrow(() -> new ItemNotFoundException("Đơn hàng không tồn tại"));
 
-        // Thay vì xóa cứng (deleteById), ta chuyển trạng thái thành CANCELLED
-        order.setStatus(OrderStatus.CANCELLED);
+        // BƯỚC 1: Hoàn lại tồn kho
+        restoreStock(order);
 
-        Order saved = orderRepository.save(order);
-        return modelMapper.map(saved, OrderDTO.class);
+        // BƯỚC 2: Xóa cứng
+        OrderDTO deletedDTO = modelMapper.map(order, OrderDTO.class);
+        orderRepository.delete(order);
+
+        return deletedDTO;
     }
 
     @Override
