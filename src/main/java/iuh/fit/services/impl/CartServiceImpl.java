@@ -1,8 +1,11 @@
 package iuh.fit.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import iuh.fit.dtos.CheckoutRequest;
+import iuh.fit.dtos.ProductDTO;
 import iuh.fit.dtos.cart.AddToCartRequest;
 import iuh.fit.dtos.cart.CartDTO;
+import iuh.fit.dtos.cart.CartItemDTO;
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.entities.Cart;
 import iuh.fit.entities.CartItem;
@@ -19,7 +22,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +37,28 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final OrderService orderService;
     private final ModelMapper modelMapper;
+    private final ObjectMapper objectMapper;
+
+    private void enrichCartImages(CartDTO cartDTO) {
+        if (cartDTO.getItems() == null) return;
+
+        for (CartItemDTO itemDTO : cartDTO.getItems()) {
+            ProductDTO productDTO = itemDTO.getProduct();
+            try {
+                Product product = productRepository.findById(productDTO.getId()).orElse(null);
+                if (product != null && product.getImageNames() != null) {
+                    List<String> imageNames = Arrays.asList(objectMapper.readValue(product.getImageNames(), String[].class));
+                    List<String> imageUrls = imageNames.stream()
+                            .map(name -> "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/" + name)
+                            .collect(Collectors.toList());
+                    productDTO.setImageUrls(imageUrls);
+                    productDTO.setImageNames(imageNames);
+                }
+            } catch (Exception e) {
+                productDTO.setImageUrls(new ArrayList<>());
+            }
+        }
+    }
 
     private Cart findOrCreateCart(User user) {
         return cartRepository.findByUserId(user.getId())
@@ -55,7 +84,9 @@ public class CartServiceImpl implements CartService {
     @Transactional(readOnly = true)
     public CartDTO getCartByUser(User currentUser) {
         Cart cart = findOrCreateCart(currentUser);
-        return modelMapper.map(cart, CartDTO.class);
+        CartDTO dto = modelMapper.map(cart, CartDTO.class);
+        enrichCartImages(dto);
+        return dto;
     }
 
     //Thêm vào giỏ
@@ -64,29 +95,30 @@ public class CartServiceImpl implements CartService {
     public CartDTO addOrUpdateItem(User currentUser, AddToCartRequest request) {
         Cart cart = findOrCreateCart(currentUser);
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm có ID: " + request.getProductId()));
+                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm: " + request.getProductId()));
 
         Optional<CartItem> existingItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), request.getProductId());
 
-        CartItem item;
         if (existingItem.isPresent()) {
-            // Cập nhật số lượng
-            item = existingItem.get();
+            CartItem item = existingItem.get();
             item.setQuantity(item.getQuantity() + request.getQuantity());
+            cartItemRepository.save(item);
         } else {
-            // Thêm mới
-            item = CartItem.builder()
+            CartItem item = CartItem.builder()
                     .cart(cart)
                     .product(product)
                     .quantity(request.getQuantity())
                     .unitPrice(product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice())
                     .build();
             cart.getItems().add(item);
+            cartItemRepository.save(item);
         }
 
-        cartItemRepository.save(item);
         recalculateCart(cart);
-        return modelMapper.map(cart, CartDTO.class);
+
+        CartDTO dto = modelMapper.map(cart, CartDTO.class);
+        enrichCartImages(dto);
+        return dto;
     }
 
     //Cập nhật giỏ hàng
@@ -98,15 +130,18 @@ public class CartServiceImpl implements CartService {
         }
 
         Cart cart = cartRepository.findByUserId(currentUser.getId())
-                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy giỏ hàng của user"));
+                .orElseThrow(() -> new ItemNotFoundException("Cart not found"));
 
         CartItem item = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
-                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm trong giỏ hàng"));
+                .orElseThrow(() -> new ItemNotFoundException("Item not found in cart"));
 
         item.setQuantity(quantity);
         cartItemRepository.save(item);
         recalculateCart(cart);
-        return modelMapper.map(cart, CartDTO.class);
+
+        CartDTO dto = modelMapper.map(cart, CartDTO.class);
+        enrichCartImages(dto);
+        return dto;
     }
 
     //Xóa sản phẩm khỏi giỏ
@@ -114,38 +149,38 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public CartDTO removeItem(User currentUser, Integer productId) {
         Cart cart = cartRepository.findByUserId(currentUser.getId())
-                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy giỏ hàng của user"));
+                .orElseThrow(() -> new ItemNotFoundException("Cart not found"));
 
         CartItem item = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId)
-                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy sản phẩm trong giỏ hàng"));
+                .orElseThrow(() -> new ItemNotFoundException("Item not found"));
 
         cartItemRepository.delete(item);
         cart.getItems().remove(item);
 
         recalculateCart(cart);
-        return modelMapper.map(cart, CartDTO.class);
+
+        CartDTO dto = modelMapper.map(cart, CartDTO.class);
+        enrichCartImages(dto);
+        return dto;
     }
 
     //Thanh toán
     @Override
     @Transactional
-    public OrderDTO checkout(User currentUser, CheckoutRequest request) { // [ĐÃ SỬA] Thêm tham số request và thay đổi kiểu trả về
+    public OrderDTO checkout(User currentUser, CheckoutRequest request) {
         Cart cart = cartRepository.findByUserId(currentUser.getId())
-                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy giỏ hàng của user"));
+                .orElseThrow(() -> new ItemNotFoundException("Cart not found"));
 
         if (cart.getItems().isEmpty()) {
-            throw new RuntimeException("Giỏ hàng rỗng, không thể thanh toán.");
+            throw new RuntimeException("Giỏ hàng rỗng");
         }
 
-        // --- BƯỚC 1: CHUYỂN CART THÀNH ORDER (Gọi OrderService mới) ---
         OrderDTO newOrder = orderService.checkout(currentUser, cart, request);
 
-        // --- BƯỚC 2: XÓA GIỎ HÀNG SAU KHI TẠO ĐƠN ---
         cart.getItems().clear();
         cart.setTotalAmount(0.0);
         cartRepository.save(cart);
 
-        // [ĐÃ SỬA] Trả về OrderDTO mới tạo
         return newOrder;
     }
 }

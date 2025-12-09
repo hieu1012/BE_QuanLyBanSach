@@ -1,6 +1,8 @@
 package iuh.fit.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import iuh.fit.dtos.CheckoutRequest;
+import iuh.fit.dtos.ProductDTO;
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.dtos.order.OrderItemDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
@@ -24,6 +26,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,9 +39,54 @@ public class OrderServiceImpl implements OrderService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final ObjectMapper objectMapper;
 
     private String generateOrderId() {
         return "ORD-" + System.currentTimeMillis();
+    }
+
+    //Xử lý trừ tồn kho
+    private void deductStock(Product product, int quantity) {
+        if (product.getStock() < quantity) {
+            throw new RuntimeException("Sản phẩm '" + product.getTitle() + "' không đủ số lượng tồn kho (Còn: " + product.getStock() + ")");
+        }
+        product.setStock(product.getStock() - quantity);
+        productRepository.save(product);
+    }
+
+    //Xử lý hoàn tồn kho (dùng khi hủy/xóa)
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getItems()) {
+            Product product = productRepository.findById(item.getProduct().getId()).orElse(null);
+            if (product != null) {
+                product.setStock(product.getStock() + item.getQuantity());
+                productRepository.save(product);
+            }
+        }
+    }
+
+    // Xử lý ảnh
+    private void enrichProductImage(OrderDTO orderDTO) {
+        if (orderDTO.getItems() == null) return;
+
+        for (OrderItemDTO itemDTO : orderDTO.getItems()) {
+            ProductDTO productDTO = itemDTO.getProduct();
+
+            try {
+                Product product = productRepository.findById(productDTO.getId()).orElse(null);
+                if (product != null && product.getImageNames() != null) {
+                    List<String> imageNames = Arrays.asList(objectMapper.readValue(product.getImageNames(), String[].class));
+                    List<String> imageUrls = imageNames.stream()
+                            .map(name -> "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/" + name)
+                            .collect(Collectors.toList());
+                    productDTO.setImageUrls(imageUrls);
+                    productDTO.setImageNames(imageNames);
+                }
+            } catch (Exception e) {
+                // Ignore lỗi parse ảnh để không chặn luồng chính
+                productDTO.setImageUrls(new ArrayList<>());
+            }
+        }
     }
 
 
@@ -60,33 +108,35 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderAddress(address);
 
         List<OrderItem> items = new ArrayList<>();
-        double calculatedTotalPrice = 0.0; //Tính tổng tiền
+        double calculatedTotalPrice = 0.0;
 
         for (OrderItemDTO dto : orderDTO.getItems()) {
             Product product = productRepository.findById(dto.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found: " + dto.getProduct().getId()));
 
-            //Luôn lấy giá từ Product trong DB, bỏ qua dto.getPrice()
+            // 1.TRỪ TỒN KHO
+            deductStock(product, dto.getQuantity());
+
             Double currentPrice = product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice();
 
             OrderItem it = new OrderItem();
             it.setProduct(product);
             it.setQuantity(dto.getQuantity());
-            it.setPrice(currentPrice); // Set giá từ DB
+            it.setPrice(currentPrice);
             it.setOrder(order);
-
             items.add(it);
 
-            // Cộng dồn tổng tiền
             calculatedTotalPrice += (currentPrice * dto.getQuantity());
         }
 
         order.setItems(items);
-        //Set tổng tiền do backend tính toán
         order.setTotalPrice(calculatedTotalPrice);
 
         Order saved = orderRepository.save(order);
-        return modelMapper.map(saved, OrderDTO.class);
+
+        OrderDTO resultDTO = modelMapper.map(saved, OrderDTO.class);
+        enrichProductImage(resultDTO);
+        return resultDTO;
     }
 
     //Lấy danh sách đơn hàng của 1 user
@@ -94,53 +144,31 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> findOrdersByUserId(Integer userId) {
         return orderRepository.findByUserId(userId)
                 .stream()
-                .map(o -> modelMapper.map(o, OrderDTO.class))
+                .map(o -> {
+                    OrderDTO dto = modelMapper.map(o, OrderDTO.class);
+                    enrichProductImage(dto);
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public Page<OrderSummaryDTO> getOrdersByFilter(
-            User currentUser,
-            String keyword,
-            OrderStatus status,
-            LocalDateTime startDate,
-            LocalDateTime endDate,
-            Pageable pageable) {
-
-        // 1. Phân quyền và tạo Specification cơ bản
+    public Page<OrderSummaryDTO> getOrdersByFilter(User currentUser, String keyword, OrderStatus status, LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
         Specification<Order> spec = (root, query, cb) -> null;
-
         if (currentUser.getRole() == Role.USER) {
-            // User chỉ xem đơn hàng của chính mình
             spec = spec.and((root, query, cb) -> cb.equal(root.get("user").get("id"), currentUser.getId()));
         } else if (currentUser.getRole() != Role.ADMIN && currentUser.getRole() != Role.MASTER) {
-            // Cấm nếu không phải USER, ADMIN, MASTER
-            throw new ForbiddenException("Bạn không có quyền xem danh sách đơn hàng");
+            throw new ForbiddenException("Không có quyền");
         }
-
-        // 2. Thêm điều kiện Lọc theo Trạng thái
-        if (status != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
-        }
-
-        // 3. Thêm điều kiện Tìm kiếm theo Từ khóa (orderId hoặc fullName)
+        if (status != null) spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
         if (keyword != null && !keyword.isBlank()) {
-            String lowerCaseKeyword = "%" + keyword.toLowerCase() + "%";
-            spec = spec.and((root, query, cb) -> cb.or(
-                    cb.like(cb.lower(root.get("orderId")), lowerCaseKeyword),
-                    cb.like(cb.lower(root.get("user").get("fullName")), lowerCaseKeyword)
-            ));
+            String k = "%" + keyword.toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> cb.or(cb.like(cb.lower(root.get("orderId")), k), cb.like(cb.lower(root.get("user").get("fullName")), k)));
         }
+        if (startDate != null && endDate != null) spec = spec.and((root, query, cb) -> cb.between(root.get("orderDate"), startDate, endDate));
 
-        // 4. Thêm điều kiện Lọc theo Khoảng thời gian
-        if (startDate != null && endDate != null) {
-            spec = spec.and((root, query, cb) -> cb.between(root.get("orderDate"), startDate, endDate));
-        }
-
-        // 5. Thực thi truy vấn với Phân trang
         Page<Order> orders = orderRepository.findAll(spec, pageable);
-
-        // 6. Ánh xạ kết quả sang OrderSummaryDTO
         return orders.map(o -> {
             OrderSummaryDTO s = new OrderSummaryDTO();
             s.setId(o.getId());
@@ -160,28 +188,10 @@ public class OrderServiceImpl implements OrderService {
 
     //Cập nhật trạng thái đơn hàng
     @Override
-    public OrderDTO updateOrderStatus(Integer orderId, OrderStatus newStatus){
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order Not Found"));
+    public OrderDTO updateOrderStatus(Integer orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Not Found"));
         order.setStatus(newStatus);
-        Order updated = orderRepository.save(order);
-        return modelMapper.map(updated, OrderDTO.class);
-    }
-
-    private void restoreStock(Order order) {
-        for (OrderItem item : order.getItems()) {
-            // Lấy lại sản phẩm từ DB (đảm bảo tính mới nhất)
-            Product product = productRepository.findById(item.getProduct().getId())
-                    .orElse(null); // Không nên ném lỗi ở đây, chỉ ghi log nếu sản phẩm bị xóa
-
-            if (product != null) {
-                // Hoàn lại số lượng
-                product.setStock(product.getStock() + item.getQuantity());
-                productRepository.save(product);
-                // Ghi log (trong môi trường thực tế)
-                System.out.println("Đã hoàn lại tồn kho cho Product ID: " + product.getId() + ", Quantity: " + item.getQuantity());
-            }
-        }
+        return modelMapper.map(orderRepository.save(order), OrderDTO.class);
     }
 
     @Override
@@ -190,42 +200,33 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ItemNotFoundException("Đơn hàng không tồn tại"));
 
-        // Kiểm tra quyền sở hữu
         if (!order.getUser().getId().equals(currentUser.getId())) {
             throw new ForbiddenException("Bạn không có quyền hủy đơn hàng này");
         }
-
         if (order.getStatus() != OrderStatus.PENDING) {
-            throw new RuntimeException("Chỉ có thể hủy đơn hàng đang chờ xử lý (PENDING)");
+            throw new RuntimeException("Chỉ có thể hủy đơn hàng đang chờ xử lý");
         }
 
-        order.setStatus(OrderStatus.CANCELLED);
-
-        // BƯỚC 1: Hoàn lại tồn kho
         restoreStock(order);
-
-        // BƯỚC 2: Chuyển trạng thái thành CANCELLED
         order.setStatus(OrderStatus.CANCELLED);
-
         Order saved = orderRepository.save(order);
-        return modelMapper.map(saved, OrderDTO.class);
+
+        OrderDTO dto = modelMapper.map(saved, OrderDTO.class);
+        enrichProductImage(dto);
+        return dto;
     }
 
     //Xóa đơn hàng (Admin)
     @Override
     @Transactional
     public OrderDTO deleteOrder(Integer id){
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException("Đơn hàng không tồn tại"));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Not Found"));
+        OrderDTO dto = modelMapper.map(order, OrderDTO.class);
+        enrichProductImage(dto);
 
-        // BƯỚC 1: Hoàn lại tồn kho
         restoreStock(order);
-
-        // BƯỚC 2: Xóa cứng
-        OrderDTO deletedDTO = modelMapper.map(order, OrderDTO.class);
         orderRepository.delete(order);
-
-        return deletedDTO;
+        return dto;
     }
 
     @Override
@@ -238,13 +239,9 @@ public class OrderServiceImpl implements OrderService {
         // 1. Cập nhật địa chỉ giao hàng
         if (orderDTO.getOrderAddress() != null) {
             if (order.getOrderAddress() == null) {
-                // Nếu chưa có địa chỉ, tạo mới (ModelMapper map ID null thì Hibernate sẽ tự gen ID mới -> OK)
                 OrderAddress newAddress = modelMapper.map(orderDTO.getOrderAddress(), OrderAddress.class);
                 order.setOrderAddress(newAddress);
             } else {
-                // [SỬA LỖI TẠI ĐÂY]
-                // Không dùng modelMapper.map() trực tiếp để tránh bị ghi đè ID thành null
-                // Ta cập nhật thủ công các trường thông tin
                 var newAddrInfo = orderDTO.getOrderAddress();
                 var currentAddr = order.getOrderAddress();
 
@@ -256,7 +253,6 @@ public class OrderServiceImpl implements OrderService {
                 currentAddr.setPincode(newAddrInfo.getPincode());
                 currentAddr.setMobileNo(newAddrInfo.getMobileNo());
                 currentAddr.setEmail(newAddrInfo.getEmail());
-                // TUYỆT ĐỐI KHÔNG SET ID
             }
         }
 
@@ -272,10 +268,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 4. Cập nhật items
         if (orderDTO.getItems() != null) {
-            // Xóa items cũ (orphanRemoval = true trong Entity sẽ giúp xóa khỏi DB)
             order.getItems().clear();
-
-            // Thêm items mới
             List<OrderItem> newItems = new ArrayList<>();
             for (var dto : orderDTO.getItems()) {
                 Product product = productRepository.findById(dto.getProduct().getId())
@@ -285,7 +278,7 @@ public class OrderServiceImpl implements OrderService {
                 item.setProduct(product);
                 item.setQuantity(dto.getQuantity());
                 item.setPrice(dto.getPrice());
-                item.setOrder(order); // Quan trọng
+                item.setOrder(order);
                 newItems.add(item);
             }
             order.getItems().addAll(newItems);
@@ -297,43 +290,48 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order updated = orderRepository.save(order);
-        return modelMapper.map(updated, OrderDTO.class);
+        OrderDTO dto = modelMapper.map(updated, OrderDTO.class);
+        enrichProductImage(dto);
+        return dto;
     }
 
 
-    //Lấy chi tiết đơn hàng, kiểm tra User có phải là chủ đơn hàng không
+    //Lấy chi tiết đơn hàng
     @Override
     @Transactional(readOnly = true)
     public OrderDTO findOrderByIdForUser(Integer orderId, User currentUser) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy đơn hàng: " + orderId));
 
-        // Kiểm tra quyền: Chỉ cho phép chủ đơn hàng (hoặc Admin/Master) xem
         if (currentUser.getRole() != Role.MASTER && currentUser.getRole() != Role.ADMIN) {
             if (!order.getUser().getId().equals(currentUser.getId())) {
                 throw new ForbiddenException("Bạn không có quyền xem đơn hàng này");
             }
         }
 
-        return modelMapper.map(order, OrderDTO.class);
+        OrderDTO dto = modelMapper.map(order, OrderDTO.class);
+        enrichProductImage(dto);
+        return dto;
     }
 
     //Lấy đơn hàng theo User và Status
     @Override
     public List<OrderDTO> findOrdersByUserIdAndStatus(Integer userId, OrderStatus status) {
-        return orderRepository.findByUserIdAndStatus(userId, status)
-                .stream()
-                .map(o -> modelMapper.map(o, OrderDTO.class))
-                .collect(Collectors.toList());
+        return orderRepository.findByUserIdAndStatus(userId, status).stream()
+                .map(o -> {
+                    OrderDTO dto = modelMapper.map(o, OrderDTO.class);
+                    enrichProductImage(dto);
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
     //Lấy đơn hàng theo ID
     @Override
-    @Transactional(readOnly = true)
     public OrderDTO findOrderById(Integer orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ItemNotFoundException("Không tìm thấy đơn hàng: " + orderId));
-        return modelMapper.map(order, OrderDTO.class);
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new ItemNotFoundException("Not Found"));
+        OrderDTO dto = modelMapper.map(order, OrderDTO.class);
+        enrichProductImage(dto);
+        return dto;
     }
 
     //Yêu cầu Thanh toán
@@ -347,34 +345,35 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setOrderId(generateOrderId());
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDING); // Đơn mới luôn ở trạng thái PENDING
+        order.setStatus(OrderStatus.PENDING);
         order.setPaymentType(request.getPaymentType());
-
-        // 1. Thiết lập User
         order.setUser(currentUser);
+        order.setOrderAddress(modelMapper.map(request.getOrderAddress(), OrderAddress.class));
 
-        // 2. Thiết lập Địa chỉ (snapshot)
-        OrderAddress address = modelMapper.map(request.getOrderAddress(), OrderAddress.class);
-        order.setOrderAddress(address);
-
-        // 3. Chuyển Cart Items thành Order Items
         List<OrderItem> items = new ArrayList<>();
+
         for (CartItem cartItem : cart.getItems()) {
+            Product product = cartItem.getProduct();
+
+            // 1.TRỪ TỒN KHO
+            deductStock(product, cartItem.getQuantity());
 
             OrderItem orderItem = new OrderItem();
-            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setProduct(product);
             orderItem.setQuantity(cartItem.getQuantity());
-            // Lấy giá từ CartItem (đã được lưu khi thêm vào giỏ)
             orderItem.setPrice(cartItem.getUnitPrice());
             orderItem.setOrder(order);
             items.add(orderItem);
         }
 
         order.setItems(items);
-        order.setTotalPrice(cart.getTotalAmount()); // Tổng tiền lấy từ Cart Entity
+        order.setTotalPrice(cart.getTotalAmount());
 
         Order saved = orderRepository.save(order);
-        return modelMapper.map(saved, OrderDTO.class);
+
+        OrderDTO resultDTO = modelMapper.map(saved, OrderDTO.class);
+        enrichProductImage(resultDTO);
+        return resultDTO;
     }
 
 }
