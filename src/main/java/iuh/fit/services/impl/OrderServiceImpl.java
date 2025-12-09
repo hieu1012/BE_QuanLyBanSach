@@ -3,6 +3,7 @@ package iuh.fit.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import iuh.fit.dtos.CheckoutRequest;
 import iuh.fit.dtos.ProductDTO;
+import iuh.fit.dtos.cart.CartItemDTO;
 import iuh.fit.dtos.order.OrderDTO;
 import iuh.fit.dtos.order.OrderItemDTO;
 import iuh.fit.dtos.order.OrderSummaryDTO;
@@ -67,23 +68,24 @@ public class OrderServiceImpl implements OrderService {
 
     // Xử lý ảnh
     private void enrichProductImage(OrderDTO orderDTO) {
-        if (orderDTO.getItems() == null) return;
+        String baseUrl = "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/";
 
         for (OrderItemDTO itemDTO : orderDTO.getItems()) {
             ProductDTO productDTO = itemDTO.getProduct();
-
             try {
                 Product product = productRepository.findById(productDTO.getId()).orElse(null);
                 if (product != null && product.getImageNames() != null) {
+
                     List<String> imageNames = Arrays.asList(objectMapper.readValue(product.getImageNames(), String[].class));
+
                     List<String> imageUrls = imageNames.stream()
-                            .map(name -> "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/" + name)
+                            .map(name -> baseUrl + name)
                             .collect(Collectors.toList());
+
                     productDTO.setImageUrls(imageUrls);
                     productDTO.setImageNames(imageNames);
                 }
             } catch (Exception e) {
-                // Ignore lỗi parse ảnh để không chặn luồng chính
                 productDTO.setImageUrls(new ArrayList<>());
             }
         }
@@ -351,23 +353,28 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderAddress(modelMapper.map(request.getOrderAddress(), OrderAddress.class));
 
         List<OrderItem> items = new ArrayList<>();
+        double calculatedTotal = 0.0;
 
         for (CartItem cartItem : cart.getItems()) {
             Product product = cartItem.getProduct();
 
-            // 1.TRỪ TỒN KHO
             deductStock(product, cartItem.getQuantity());
 
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPrice(cartItem.getUnitPrice());
+
+            Double itemPrice = cartItem.getUnitPrice();
+            orderItem.setPrice(itemPrice);
             orderItem.setOrder(order);
             items.add(orderItem);
+
+            calculatedTotal += (itemPrice * cartItem.getQuantity());
         }
 
         order.setItems(items);
-        order.setTotalPrice(cart.getTotalAmount());
+
+        order.setTotalPrice(calculatedTotal);
 
         Order saved = orderRepository.save(order);
 
