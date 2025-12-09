@@ -1,0 +1,140 @@
+@startuml UseCase_BanSach
+!define DIRECTION top to bottom direction
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam actorBackgroundColor #E3F2FD
+skinparam usecaseBackgroundColor #FFEB3B
+skinparam usecase {
+    BackgroundColor #FFFACD
+    BorderColor #FFD700
+}
+
+' ===== ACTORS =====
+actor "👤 Khách Hàng\n(USER)" as Customer
+actor "👨‍💼 Admin\n(ADMIN)" as Admin  
+actor "👑 Master\n(MASTER)" as Master
+
+rectangle "📦 HỆ THỐNG QUẢN LÝ BÁN SÁCH" {
+    
+    ' ===== COLUMN 1: XÁC THỰC & TÀI KHOẢN =====
+    package "🔐 XÁC THỰC & TÀI KHOẢN" #LIGHTBLUE {
+        (Đăng Ký) as UC1
+        (Đăng Nhập) as UC2
+        (Quên MK) as UC3
+        (Đổi MK) as UC4
+        (Xem Hồ Sơ) as UC5
+        (Cập Nhật Hồ Sơ) as UC6
+    }
+    
+    ' ===== COLUMN 2: SẢN PHẨM & DANH MỤC =====
+    package "📚 SẢN PHẨM & DANH MỤC" #LIGHTGREEN {
+        (Xem Danh Sách) as UC7
+        (Tìm Kiếm) as UC8
+        (Chi Tiết Sách) as UC9
+        (Thêm Sách) as UC10
+        (Sửa Sách) as UC11
+        (Xóa Sách) as UC12
+        (Xem Danh Mục) as UC13
+        (Thêm Danh Mục) as UC14
+        (Sửa Danh Mục) as UC15
+        (Xóa Danh Mục) as UC16
+    }
+    
+    ' ===== COLUMN 3: GIỎ HÀNG & ĐƠN HÀNG =====
+    package "🛒 GIỎ & ĐƠN HÀNG" #LIGHTYELLOW {
+        (Xem Giỏ) as UC17
+        (Thêm Vào Giỏ) as UC18
+        (Cập Nhật SL) as UC19
+        (Xóa Khỏi Giỏ) as UC20
+        (Tạo Đơn) as UC21
+        (Xem Đơn) as UC22
+        (Lịch Sử Đơn) as UC23
+        (Theo Dõi) as UC24
+        (Hủy Đơn) as UC25
+    }
+    
+    ' ===== COLUMN 4: QUẢN LÝ =====
+    package "👥 QUẢN LÝ HỆ THỐNG" #LIGHTCYAN {
+        (Quản Lý Tất Cả Đơn) as UC26
+        (Cập Nhật TT Đơn) as UC27
+        (Duyệt Hủy Đơn) as UC28
+        (Xem User) as UC29
+        (Tạo User) as UC30
+        (Cập Nhật User) as UC31
+        (Khóa/Mở Khóa) as UC32
+        (Gán Quyền) as UC33
+        (Xóa User) as UC34
+    }
+    
+    ' ===== COLUMN 5: THỐNG KÊ =====
+    package "📊 THỐNG KÊ & BÁO CÁO" #LIGHTPINK {
+        (Xem Thống Kê) as UC35
+        (Báo Cáo) as UC36
+        (Xuất PDF) as UC37
+    }
+}
+
+' ===== CUSTOMER =====
+Customer --> UC1
+Customer --> UC2
+Customer --> UC3
+Customer --> UC4
+Customer --> UC5
+Customer --> UC6
+Customer --> UC7
+Customer --> UC8
+Customer --> UC9
+Customer --> UC13
+Customer --> UC17
+Customer --> UC18
+Customer --> UC19
+Customer --> UC20
+Customer --> UC21
+Customer --> UC22
+Customer --> UC23
+Customer --> UC24
+Customer --> UC25
+
+' ===== ADMIN =====
+Admin --> UC2
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC7
+Admin --> UC8
+Admin --> UC9
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC14
+Admin --> UC15
+Admin --> UC16
+Admin --> UC26
+Admin --> UC27
+Admin --> UC28
+Admin --> UC29
+Admin --> UC30
+Admin --> UC31
+Admin --> UC35
+Admin --> UC36
+
+' ===== MASTER =====
+Master --> UC2
+Master --> UC4
+Master --> UC5
+Master --> UC6
+Master --> UC26
+Master --> UC27
+Master --> UC28
+Master --> UC29
+Master --> UC30
+Master --> UC31
+Master --> UC32
+Master --> UC33
+Master --> UC34
+Master --> UC35
+Master --> UC36
+Master --> UC37
+
+@enduml

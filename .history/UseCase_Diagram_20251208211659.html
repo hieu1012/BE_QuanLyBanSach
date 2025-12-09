@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sơ Đồ Use Case - Quản Lý Bán Sách</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 1400px;
+            width: 100%;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        canvas {
+            width: 100%;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .legend h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 40px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .legend-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 50%;
+        }
+        
+        .actor-icon {
+            background: #E3F2FD;
+            border: 2px solid #1976D2;
+        }
+        
+        .usecase-icon {
+            background: #FFEB3B;
+            border: 2px solid #F57F17;
+        }
+        
+        .line-icon {
+            background: linear-gradient(to right, #1976D2, #1976D2);
+            height: 2px;
+            width: 30px;
+            margin-right: 5px;
+        }
+        
+        .footer {
+            padding: 20px 40px;
+            background: #f9f9f9;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Sơ Đồ Use Case</h1>
+            <p>Hệ Thống Quản Lý Bán Sách</p>
+        </div>
+        
+        <div class="content">
+            <canvas id="usecaseCanvas"></canvas>
+            
+            <div class="legend">
+                <h3>📌 Chú Thích:</h3>
+                <div class="legend-item">
+                    <span class="legend-icon usecase-icon"></span>
+                    <strong>Use Case:</strong> Chức năng/Yêu cầu của hệ thống
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon actor-icon"></span>
+                    <strong>Actor:</strong> Người dùng/Người tương tác với hệ thống
+                </div>
+                <div class="legend-item">
+                    <div class="line-icon"></div>
+                    <strong>Kết nối:</strong> Mối quan hệ giữa Actor và Use Case
+                </div>
+                <br>
+                <div class="legend-item">
+                    <strong>👤 Khách Hàng:</strong> Đăng ký, mua hàng, xem đơn hàng
+                </div>
+                <div class="legend-item">
+                    <strong>👨‍💼 Admin:</strong> Quản lý sản phẩm, đơn hàng, thống kê
+                </div>
+                <div class="legend-item">
+                    <strong>👑 Master:</strong> Quản lý người dùng, toàn quyền hệ thống
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Hệ Thống Quản Lý Bán Sách - Spring Boot REST API</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('usecaseCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        canvas.width = canvas.offsetWidth;
+        canvas.height = 900;
+
+        // Colors
+        const colors = {
+            actor: { fill: '#E3F2FD', stroke: '#1976D2' },
+            usecase: { fill: '#FFEB3B', stroke: '#F57F17' },
+            line: '#1976D2',
+            text: '#333',
+            system: '#f5f5f5'
+        };
+
+        // Helper functions
+        function drawCircle(x, y, r, fillColor, strokeColor) {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawEllipse(x, y, rx, ry, fillColor, strokeColor) {
+            ctx.beginPath();
+            ctx.ellipse(x, y, rx, ry, 0, 0, 2 * Math.PI);
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function drawLine(x1, y1, x2, y2, color, width = 2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = width;
+            ctx.stroke();
+        }
+
+        function drawText(text, x, y, size = 12, weight = 'normal', align = 'center') {
+            ctx.font = `${weight} ${size}px 'Segoe UI', sans-serif`;
+            ctx.fillStyle = colors.text;
+            ctx.textAlign = align;
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, x, y);
+        }
+
+        function drawRoundRect(x, y, w, h, r, fillColor, strokeColor) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // Draw system boundary
+        drawRoundRect(220, 60, 1050, 750, 10, colors.system, '#424242');
+        drawText('📦 Hệ Thống Quản Lý Bán Sách', 240, 85, 14, 'bold', 'left');
+
+        // ============ ACTORS ============
+        // Customer
+        drawCircle(80, 200, 25, colors.actor.fill, colors.actor.stroke);
+        drawText('Khách Hàng', 80, 250, 12, 'bold');
+
+        // Admin
+        drawCircle(80, 450, 25, colors.actor.fill, colors.actor.stroke);
+        drawText('Admin', 80, 500, 12, 'bold');
+
+        // Master
+        drawCircle(80, 700, 25, colors.actor.fill, colors.actor.stroke);
+        drawText('Master', 80, 750, 12, 'bold');
+
+        // ============ USE CASES ============
+        const usecases = [
+            // Authentication section
+            { x: 330, y: 140, label: '🔐 Xác Thực', isSection: true },
+            { x: 320, y: 170, rx: 45, ry: 20, label: 'Đăng Ký' },
+            { x: 320, y: 210, rx: 45, ry: 20, label: 'Đăng Nhập' },
+            { x: 400, y: 170, rx: 45, ry: 20, label: 'Quên MK' },
+            { x: 400, y: 210, rx: 45, ry: 20, label: 'Đặt Lại MK' },
+
+            // Product section
+            { x: 550, y: 140, label: '📚 Sản Phẩm', isSection: true },
+            { x: 520, y: 170, rx: 50, ry: 20, label: 'Xem Sách' },
+            { x: 520, y: 210, rx: 50, ry: 20, label: 'Chi Tiết' },
+            { x: 600, y: 170, rx: 50, ry: 20, label: 'Tìm Kiếm' },
+            { x: 600, y: 210, rx: 50, ry: 20, label: 'Lọc DM' },
+            { x: 680, y: 170, rx: 50, ry: 20, label: 'Thêm' },
+            { x: 680, y: 210, rx: 50, ry: 20, label: 'Sửa' },
+
+            // Cart section
+            { x: 330, y: 290, label: '🛒 Giỏ Hàng', isSection: true },
+            { x: 320, y: 320, rx: 50, ry: 20, label: 'Xem Giỏ' },
+            { x: 320, y: 360, rx: 50, ry: 20, label: 'Thêm Vào' },
+            { x: 400, y: 320, rx: 50, ry: 20, label: 'Cập Nhật SL' },
+            { x: 400, y: 360, rx: 50, ry: 20, label: 'Xóa Khỏi' },
+
+            // Order section
+            { x: 550, y: 290, label: '📋 Đơn Hàng', isSection: true },
+            { x: 520, y: 320, rx: 50, ry: 20, label: 'Tạo Đơn' },
+            { x: 520, y: 360, rx: 50, ry: 20, label: 'Xem Đơn' },
+            { x: 600, y: 320, rx: 50, ry: 20, label: 'Lịch Sử' },
+            { x: 600, y: 360, rx: 50, ry: 20, label: 'Hủy Đơn' },
+            { x: 680, y: 320, rx: 50, ry: 20, label: 'Quản Lý' },
+            { x: 680, y: 360, rx: 50, ry: 20, label: 'Cập Nhật TT' },
+
+            // Category section
+            { x: 330, y: 440, label: '📑 Danh Mục', isSection: true },
+            { x: 320, y: 470, rx: 50, ry: 20, label: 'Xem DM' },
+            { x: 400, y: 470, rx: 50, ry: 20, label: 'Thêm DM' },
+
+            // Statistics section
+            { x: 550, y: 440, label: '📊 Thống Kê', isSection: true },
+            { x: 520, y: 470, rx: 50, ry: 20, label: 'Xem TK' },
+            { x: 600, y: 470, rx: 50, ry: 20, label: 'Báo Cáo' },
+
+            // User management
+            { x: 750, y: 440, label: '👥 Quản Lý NV', isSection: true },
+            { x: 780, y: 470, rx: 50, ry: 20, label: 'Quản Lý' }
+        ];
+
+        usecases.forEach(uc => {
+            if (uc.isSection) {
+                drawText(uc.label, uc.x, uc.y, 12, 'bold');
+            } else {
+                drawEllipse(uc.x, uc.y, uc.rx, uc.ry, colors.usecase.fill, colors.usecase.stroke);
+                drawText(uc.label, uc.x, uc.y, 11, 'normal');
+            }
+        });
+
+        // ============ CONNECTIONS ============
+        // Customer connections
+        const customerConnections = [
+            // Auth
+            [80, 225, 320, 170], [80, 225, 320, 210], [80, 225, 400, 170], [80, 225, 400, 210],
+            // Products
+            [110, 200, 520, 170], [110, 200, 520, 210], [110, 200, 600, 170], [110, 200, 600, 210],
+            // Cart
+            [110, 225, 320, 320], [110, 225, 320, 360], [110, 225, 400, 320], [110, 225, 400, 360],
+            // Orders
+            [110, 250, 520, 320], [110, 250, 520, 360], [110, 250, 600, 320], [110, 250, 600, 360]
+        ];
+
+        customerConnections.forEach(conn => {
+            drawLine(conn[0], conn[1], conn[2], conn[3], colors.line, 1.5);
+        });
+
+        // Admin connections
+        const adminConnections = [
+            // Auth
+            [110, 450, 320, 210],
+            // Products
+            [120, 430, 520, 170], [120, 430, 520, 210], [120, 430, 600, 170], [120, 430, 600, 210],
+            [120, 430, 680, 170], [120, 430, 680, 210],
+            // Cart
+            [110, 475, 320, 320],
+            // Orders
+            [120, 480, 520, 320], [120, 480, 520, 360], [120, 480, 680, 320], [120, 480, 680, 360],
+            // Categories
+            [110, 500, 320, 470], [110, 500, 400, 470],
+            // Statistics
+            [110, 510, 520, 470], [110, 510, 600, 470]
+        ];
+
+        adminConnections.forEach(conn => {
+            drawLine(conn[0], conn[1], conn[2], conn[3], colors.line, 1.5);
+        });
+
+        // Master connections
+        const masterConnections = [
+            // Auth
+            [110, 700, 320, 210],
+            // Orders
+            [120, 680, 680, 320], [120, 680, 680, 360],
+            // Statistics
+            [120, 690, 520, 470], [120, 690, 600, 470],
+            // User Management
+            [110, 710, 780, 470]
+        ];
+
+        masterConnections.forEach(conn => {
+            drawLine(conn[0], conn[1], conn[2], conn[3], colors.line, 1.5);
+        });
+
+        // Draw legend at bottom
+        drawText('🔐 KHÁCH HÀNG: Đăng ký, mua hàng, xem đơn', 250, 850, 11, 'normal', 'left');
+        drawText('👨‍💼 ADMIN: Quản lý sản phẩm, đơn hàng, thống kê', 550, 850, 11, 'normal', 'left');
+        drawText('👑 MASTER: Quản lý người dùng, toàn quyền', 900, 850, 11, 'normal', 'left');
+    </script>
+</body>
+</html>

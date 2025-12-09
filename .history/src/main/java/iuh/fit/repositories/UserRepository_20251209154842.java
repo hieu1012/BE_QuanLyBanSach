@@ -47,51 +47,40 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> searchExcludingRole(@Param("keyword") String keyword, @Param("excludeRole") Role excludeRole);
 
     // Phân trang
-    @Query("SELECT u FROM User u WHERE " +
-            "LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%')) " +
-            "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%')) " +
-            "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :fullName, '%')) " +
-            "ORDER BY u.id DESC")
     Page<User> findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrFullNameContainingIgnoreCase(
-            @Param("username") String username, @Param("email") String email, @Param("fullName") String fullName, Pageable pageable);
+            String username, String email, String fullName, Pageable pageable);
 
     // Tìm kiếm với phân trang (excludes MASTER)
     @Query("SELECT u FROM User u WHERE u.role <> :excludeRole AND (" +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-            "ORDER BY u.id DESC")
+            "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<User> searchWithPagingExcludingRole(@Param("keyword") String keyword, @Param("excludeRole") Role excludeRole, Pageable pageable);
 
     // Tìm kiếm với phân trang (tất cả)
     @Query("SELECT u FROM User u WHERE " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "ORDER BY u.id DESC")
+            "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<User> searchWithPaging(@Param("keyword") String keyword, Pageable pageable);
 
     boolean existsByRole(Role role);
 
     // Tìm kiếm theo role
-    @Query("SELECT u FROM User u WHERE u.role = :role ORDER BY u.id DESC")
-    Page<User> findByRole(@Param("role") Role role, Pageable pageable);
+    Page<User> findByRole(Role role, Pageable pageable);
 
     // Tìm kiếm theo isActive
-    @Query("SELECT u FROM User u WHERE u.isActive = :isActive ORDER BY u.id DESC")
-    Page<User> findByIsActive(@Param("isActive") Boolean isActive, Pageable pageable);
+    Page<User> findByIsActive(Boolean isActive, Pageable pageable);
 
     // Tìm kiếm theo role và isActive
-    @Query("SELECT u FROM User u WHERE u.role = :role AND u.isActive = :isActive ORDER BY u.id DESC")
-    Page<User> findByRoleAndIsActive(@Param("role") Role role, @Param("isActive") Boolean isActive, Pageable pageable);
+    Page<User> findByRoleAndIsActive(Role role, Boolean isActive, Pageable pageable);
 
     // Tìm kiếm theo keyword và role
     @Query("SELECT u FROM User u WHERE (" +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-            "AND u.role = :role " +
-            "ORDER BY u.id DESC")
+            "AND u.role = :role")
     Page<User> searchByKeywordAndRole(@Param("keyword") String keyword, @Param("role") Role role, Pageable pageable);
 
     // Tìm kiếm theo keyword và isActive
@@ -99,12 +88,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
-            "AND u.isActive = :isActive " +
-            "ORDER BY u.id DESC")
+            "AND u.isActive = :isActive")
     Page<User> searchByKeywordAndIsActive(@Param("keyword") String keyword, @Param("isActive") Boolean isActive, Pageable pageable);
 
     // Tìm kiếm theo role và isActive (excludes MASTER)
-    @Query("SELECT u FROM User u WHERE u.role <> :excludeRole AND u.role = :role AND u.isActive = :isActive ORDER BY u.id DESC")
+    @Query("SELECT u FROM User u WHERE u.role <> :excludeRole AND u.role = :role AND u.isActive = :isActive")
     Page<User> findByRoleAndIsActiveExcludingRole(@Param("role") Role role, @Param("isActive") Boolean isActive, @Param("excludeRole") Role excludeRole, Pageable pageable);
 
 }

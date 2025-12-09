@@ -1,0 +1,143 @@
+@startuml UseCase_BanSach
+!define DIRECTION top to bottom direction
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam actorBackgroundColor #E3F2FD
+skinparam usecaseBackgroundColor #FFEB3B
+skinparam usecase {
+    BackgroundColor #FFFACD
+    BorderColor #FFD700
+}
+
+' ===== ACTORS =====
+actor "👤 Khách Hàng\n(USER)" as Customer
+actor "👨‍💼 Admin\n(ADMIN)" as Admin  
+actor "👑 Master\n(MASTER)" as Master
+
+rectangle "📦 HỆ THỐNG QUẢN LÝ BÁN SÁCH" {
+    
+    ' ===== COLUMN 1: XÁC THỰC & TÀI KHOẢN =====
+    package "🔐 XÁC THỰC & TÀI KHOẢN" #LIGHTBLUE {
+        (Đăng Ký) as UC1
+        (Đăng Nhập) as UC2
+        (Quên MK) as UC3
+        (Đổi MK) as UC4
+        (Xem Hồ Sơ) as UC5
+        (Cập Nhật Hồ Sơ) as UC6
+    }
+    
+    ' ===== COLUMN 2: SẢN PHẨM & DANH MỤC =====
+    package "📚 SẢN PHẨM & DANH MỤC" #LIGHTGREEN {
+        (Xem Danh Sách) as UC7
+        (Tìm Kiếm) as UC8
+        (Chi Tiết Sách) as UC9
+        (Thêm Sách) as UC10
+        (Sửa Sách) as UC11
+        (Xóa Sách) as UC12
+        (Xem Danh Mục) as UC13
+        (Thêm Danh Mục) as UC14
+        (Sửa Danh Mục) as UC15
+        (Xóa Danh Mục) as UC16
+    }
+    
+    ' ===== COLUMN 3: GIỎ HÀNG & ĐƠN HÀNG =====
+    package "🛒 GIỎ & ĐƠN HÀNG" #LIGHTYELLOW {
+        (Xem Giỏ) as UC17
+        (Thêm Vào Giỏ) as UC18
+        (Cập Nhật SL) as UC19
+        (Xóa Khỏi Giỏ) as UC20
+        (Tạo Đơn) as UC21
+        (Xem Đơn) as UC22
+        (Lịch Sử Đơn) as UC23
+        (Theo Dõi) as UC24
+        (Hủy Đơn) as UC25
+    }
+    
+    ' ===== COLUMN 4: QUẢN LÝ =====
+    package "👥 QUẢN LÝ HỆ THỐNG" #LIGHTCYAN {
+        (Quản Lý Tất Cả Đơn) as UC26
+        (Cập Nhật TT Đơn) as UC27
+        (Duyệt Hủy Đơn) as UC28
+        (Xem User) as UC29
+        (Tạo User) as UC30
+        (Cập Nhật User) as UC31
+        (Khóa/Mở Khóa) as UC32
+        (Gán Quyền) as UC33
+        (Xóa User) as UC34
+    }
+    
+    ' ===== COLUMN 5: THỐNG KÊ =====
+    package "📊 THỐNG KÊ & BÁO CÁO" #LIGHTPINK {
+        (Xem Thống Kê) as UC35
+        (Báo Cáo) as UC36
+        (Xuất PDF) as UC37
+    }
+}
+
+
+' ===== RELATIONSHIPS =====
+
+' ===== CUSTOMER (Khách Hàng) =====
+Customer --|> UC1 : Đăng ký
+Customer --|> UC2 : Đăng nhập
+Customer --|> UC3 : Quên MK
+Customer --|> UC4 : Đổi MK
+Customer --|> UC5 : Xem hồ sơ
+Customer --|> UC6 : Cập nhật
+Customer --|> UC7 : Xem sách
+Customer --|> UC8 : Tìm kiếm
+Customer --|> UC9 : Chi tiết
+Customer --|> UC13 : Xem DM
+Customer --|> UC17 : Xem giỏ
+Customer --|> UC18 : Thêm giỏ
+Customer --|> UC19 : Cập nhật SL
+Customer --|> UC20 : Xóa giỏ
+Customer --|> UC21 : Tạo đơn
+Customer --|> UC22 : Xem đơn
+Customer --|> UC23 : Lịch sử
+Customer --|> UC24 : Theo dõi
+Customer --|> UC25 : Hủy đơn
+
+' ===== ADMIN (Quản Trị Viên) =====
+Admin --|> UC2 : Đăng nhập
+Admin --|> UC4 : Đổi MK
+Admin --|> UC5 : Xem hồ sơ
+Admin --|> UC6 : Cập nhật
+Admin --|> UC7 : Xem sách
+Admin --|> UC8 : Tìm kiếm
+Admin --|> UC9 : Chi tiết
+Admin --|> UC10 : Thêm sách
+Admin --|> UC11 : Sửa sách
+Admin --|> UC12 : Xóa sách
+Admin --|> UC13 : Xem DM
+Admin --|> UC14 : Thêm DM
+Admin --|> UC15 : Sửa DM
+Admin --|> UC16 : Xóa DM
+Admin --|> UC26 : Quản lý đơn
+Admin --|> UC27 : Cập nhật TT
+Admin --|> UC28 : Duyệt hủy
+Admin --|> UC29 : Xem user
+Admin --|> UC30 : Tạo user
+Admin --|> UC31 : Cập nhật user
+Admin --|> UC35 : Thống kê
+Admin --|> UC36 : Báo cáo
+
+' ===== MASTER (Quản Lý Hệ Thống) =====
+Master --|> UC2 : Đăng nhập
+Master --|> UC4 : Đổi MK
+Master --|> UC5 : Xem hồ sơ
+Master --|> UC6 : Cập nhật
+Master --|> UC26 : Quản lý đơn
+Master --|> UC27 : Cập nhật TT
+Master --|> UC28 : Duyệt hủy
+Master --|> UC29 : Xem user
+Master --|> UC30 : Tạo user
+Master --|> UC31 : Cập nhật user
+Master --|> UC32 : Khóa/Mở khóa
+Master --|> UC33 : Gán quyền
+Master --|> UC34 : Xóa user
+Master --|> UC35 : Thống kê
+Master --|> UC36 : Báo cáo
+Master --|> UC37 : Xuất PDF
+
+@enduml

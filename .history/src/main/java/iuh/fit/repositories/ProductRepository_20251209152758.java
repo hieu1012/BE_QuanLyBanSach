@@ -11,9 +11,6 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    @Query(value = "SELECT p FROM Product p ORDER BY p.id DESC")
-    Page<Product> findAll(Pageable pageable);
-
     @Query(value = "SELECT p FROM Product p WHERE " +
             "p.title LIKE %:keyword% " +
             "OR p.description LIKE %:keyword%")
@@ -43,19 +40,19 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             "ORDER BY p.id DESC")
     Page<Product> searchWithKeywordAndPrice(@Param("keyword") String keyword, @Param("minPrice") double minPrice, @Param("maxPrice") double maxPrice, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.stock > :minStock ORDER BY p.id DESC")
+    @Query("SELECT p FROM Product p WHERE p.stock > :minStock")
     Page<Product> findByStockGreaterThan(@Param("minStock") int minStock, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.stock <= :maxStock ORDER BY p.id DESC")
+    @Query("SELECT p FROM Product p WHERE p.stock <= :maxStock")
     Page<Product> findByStockLessThanOrEqual(@Param("maxStock") int maxStock, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.stock = 0 ORDER BY p.id DESC")
+    @Query("SELECT p FROM Product p WHERE p.stock = 0")
     Page<Product> findOutOfStock(Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.stock > :minStock ORDER BY p.id DESC")
+    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.stock > :minStock")
     Page<Product> findByCategoryAndStockGreaterThan(@Param("categoryId") int categoryId, @Param("minStock") int minStock, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.price BETWEEN :minPrice AND :maxPrice AND p.stock > :minStock ORDER BY p.id DESC")
+    @Query("SELECT p FROM Product p WHERE p.price BETWEEN :minPrice AND :maxPrice AND p.stock > :minStock")
     Page<Product> findByPriceAndStockGreaterThan(@Param("minPrice") double minPrice, @Param("maxPrice") double maxPrice, @Param("minStock") int minStock, Pageable pageable);
 
 }

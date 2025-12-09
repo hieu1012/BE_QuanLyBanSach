@@ -11,9 +11,6 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    @Query(value = "SELECT p FROM Product p ORDER BY p.id DESC")
-    Page<Product> findAll(Pageable pageable);
-
     @Query(value = "SELECT p FROM Product p WHERE " +
             "p.title LIKE %:keyword% " +
             "OR p.description LIKE %:keyword%")

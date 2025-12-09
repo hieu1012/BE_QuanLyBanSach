@@ -52,10 +52,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p WHERE p.stock = 0 ORDER BY p.id DESC")
     Page<Product> findOutOfStock(Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.stock > :minStock ORDER BY p.id DESC")
+    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.stock > :minStock")
     Page<Product> findByCategoryAndStockGreaterThan(@Param("categoryId") int categoryId, @Param("minStock") int minStock, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.price BETWEEN :minPrice AND :maxPrice AND p.stock > :minStock ORDER BY p.id DESC")
+    @Query("SELECT p FROM Product p WHERE p.price BETWEEN :minPrice AND :maxPrice AND p.stock > :minStock")
     Page<Product> findByPriceAndStockGreaterThan(@Param("minPrice") double minPrice, @Param("maxPrice") double maxPrice, @Param("minStock") int minStock, Pageable pageable);
 
 }
