@@ -42,15 +42,19 @@ public class CartServiceImpl implements CartService {
     private void enrichCartImages(CartDTO cartDTO) {
         if (cartDTO.getItems() == null) return;
 
+        String baseUrl = "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/";
+
         for (CartItemDTO itemDTO : cartDTO.getItems()) {
             ProductDTO productDTO = itemDTO.getProduct();
             try {
                 Product product = productRepository.findById(productDTO.getId()).orElse(null);
                 if (product != null && product.getImageNames() != null) {
                     List<String> imageNames = Arrays.asList(objectMapper.readValue(product.getImageNames(), String[].class));
+
                     List<String> imageUrls = imageNames.stream()
-                            .map(name -> "https://res.cloudinary.com/dcedtiyrf/image/upload/q_auto,f_auto/" + name)
+                            .map(name -> baseUrl + name)
                             .collect(Collectors.toList());
+
                     productDTO.setImageUrls(imageUrls);
                     productDTO.setImageNames(imageNames);
                 }
@@ -84,6 +88,11 @@ public class CartServiceImpl implements CartService {
     @Transactional(readOnly = true)
     public CartDTO getCartByUser(User currentUser) {
         Cart cart = findOrCreateCart(currentUser);
+
+        if (cart.getItems() != null && !cart.getItems().isEmpty()) {
+            cart.getItems().sort((item1, item2) -> item2.getId().compareTo(item1.getId()));
+        }
+
         CartDTO dto = modelMapper.map(cart, CartDTO.class);
         enrichCartImages(dto);
         return dto;
@@ -176,6 +185,8 @@ public class CartServiceImpl implements CartService {
         }
 
         OrderDTO newOrder = orderService.checkout(currentUser, cart, request);
+
+        cartItemRepository.deleteAll(cart.getItems());
 
         cart.getItems().clear();
         cart.setTotalAmount(0.0);
