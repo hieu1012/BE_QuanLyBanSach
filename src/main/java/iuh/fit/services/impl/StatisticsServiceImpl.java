@@ -23,7 +23,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    
+
     private Double safeDouble(Object value) {
         return value != null ? ((Number) value).doubleValue() : 0.0;
     }
