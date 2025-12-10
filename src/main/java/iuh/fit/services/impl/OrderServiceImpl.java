@@ -347,10 +347,13 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setOrderId(generateOrderId());
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(OrderStatus.PROCESSING);
         order.setPaymentType(request.getPaymentType());
         order.setUser(currentUser);
-        order.setOrderAddress(modelMapper.map(request.getOrderAddress(), OrderAddress.class));
+
+        OrderAddress address = modelMapper.map(request.getOrderAddress(), OrderAddress.class);
+        address.setId(null);
+        order.setOrderAddress(address);
 
         List<OrderItem> items = new ArrayList<>();
         double calculatedTotal = 0.0;
@@ -373,7 +376,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setItems(items);
-
         order.setTotalPrice(calculatedTotal);
 
         Order saved = orderRepository.save(order);
