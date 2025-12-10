@@ -67,7 +67,7 @@ public class CartServiceImpl implements CartService {
                     Cart newCart = Cart.builder()
                             .user(user)
                             .totalAmount(0.0)
-                            .items(new ArrayList<>())
+//                            .items(new ArrayList<>())
                             .build();
                     return cartRepository.save(newCart);
                 });
@@ -186,8 +186,8 @@ public class CartServiceImpl implements CartService {
 
         OrderDTO newOrder = orderService.checkout(currentUser, cart, request);
 
-        List<CartItem> itemsToDelete = new ArrayList<>(cart.getItems());
-        cartItemRepository.deleteAll(itemsToDelete);
+//        List<CartItem> itemsToDelete = new ArrayList<>(cart.getItems());
+//        cartItemRepository.deleteAll(itemsToDelete);
 
         cart.getItems().clear();
         cart.setTotalAmount(0.0);

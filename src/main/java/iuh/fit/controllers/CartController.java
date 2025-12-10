@@ -103,7 +103,7 @@ public class CartController {
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", HttpStatus.CREATED.value());
-        response.put("message", "Thanh toán thành công! Đơn hàng đã được tạo.");
+        response.put("message", "Thanh toán thành công! Đơn hàng đang được xử lý.");
         response.put("data", newOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
