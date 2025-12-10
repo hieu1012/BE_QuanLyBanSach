@@ -12,10 +12,7 @@ import iuh.fit.entities.enums.OrderStatus;
 import iuh.fit.entities.enums.Role;
 import iuh.fit.exceptions.ForbiddenException;
 import iuh.fit.exceptions.ItemNotFoundException;
-import iuh.fit.repositories.OrderItemRepository;
-import iuh.fit.repositories.OrderRepository;
-import iuh.fit.repositories.ProductRepository;
-import iuh.fit.repositories.UserRepository;
+import iuh.fit.repositories.*;
 import iuh.fit.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
+    private final CartRepository cartRepository;
 
     private String generateOrderId() {
         return "ORD-" + System.currentTimeMillis();
@@ -57,11 +56,31 @@ public class OrderServiceImpl implements OrderService {
 
     //Xử lý hoàn tồn kho (dùng khi hủy/xóa)
     private void restoreStock(Order order) {
-        for (OrderItem item : order.getItems()) {
+//        for (OrderItem item : order.getItems()) {
+//            Product product = productRepository.findById(item.getProduct().getId()).orElse(null);
+//            if (product != null) {
+//                product.setStock(product.getStock() + item.getQuantity());
+//                productRepository.save(product);
+//            }
+//        }
+        List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+
+        if (items.isEmpty()) {
+            System.out.println("CẢNH BÁO: Không tìm thấy sản phẩm nào trong đơn hàng " + order.getId() + " để hoàn kho.");
+            return;
+        }
+
+        for (OrderItem item : items) {
             Product product = productRepository.findById(item.getProduct().getId()).orElse(null);
+
             if (product != null) {
-                product.setStock(product.getStock() + item.getQuantity());
+                int oldStock = product.getStock();
+                int quantityToRestore = item.getQuantity();
+
+                product.setStock(oldStock + quantityToRestore);
+
                 productRepository.save(product);
+
             }
         }
     }
@@ -135,6 +154,17 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(calculatedTotalPrice);
 
         Order saved = orderRepository.save(order);
+
+        Optional<Cart> cartOptional = cartRepository.findByUserId(user.getId());
+
+        if (cartOptional.isPresent()) {
+            Cart cart = cartOptional.get();
+
+            cart.getItems().clear();
+            cart.setTotalAmount(0.0);
+
+            cartRepository.save(cart);
+        }
 
         OrderDTO resultDTO = modelMapper.map(saved, OrderDTO.class);
         enrichProductImage(resultDTO);
