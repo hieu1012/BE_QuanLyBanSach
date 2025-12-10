@@ -22,10 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,6 +67,7 @@ public class CartServiceImpl implements CartService {
                     Cart newCart = Cart.builder()
                             .user(user)
                             .totalAmount(0.0)
+                            .items(new ArrayList<>())
                             .build();
                     return cartRepository.save(newCart);
                 });
@@ -90,7 +88,8 @@ public class CartServiceImpl implements CartService {
         Cart cart = findOrCreateCart(currentUser);
 
         if (cart.getItems() != null && !cart.getItems().isEmpty()) {
-            cart.getItems().sort((item1, item2) -> item2.getId().compareTo(item1.getId()));
+            //cart.getItems().sort((item1, item2) -> item2.getId().compareTo(item1.getId()));
+            cart.getItems().sort(Comparator.comparing(CartItem::getId).reversed());
         }
 
         CartDTO dto = modelMapper.map(cart, CartDTO.class);
@@ -125,6 +124,7 @@ public class CartServiceImpl implements CartService {
 
         recalculateCart(cart);
 
+        if (cart.getItems() != null) cart.getItems().sort(Comparator.comparing(CartItem::getId).reversed());
         CartDTO dto = modelMapper.map(cart, CartDTO.class);
         enrichCartImages(dto);
         return dto;
@@ -186,10 +186,12 @@ public class CartServiceImpl implements CartService {
 
         OrderDTO newOrder = orderService.checkout(currentUser, cart, request);
 
-        cartItemRepository.deleteAll(cart.getItems());
+        List<CartItem> itemsToDelete = new ArrayList<>(cart.getItems());
+        cartItemRepository.deleteAll(itemsToDelete);
 
         cart.getItems().clear();
         cart.setTotalAmount(0.0);
+
         cartRepository.save(cart);
 
         return newOrder;
