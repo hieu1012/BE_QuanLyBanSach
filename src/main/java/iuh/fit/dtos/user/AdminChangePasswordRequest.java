@@ -9,27 +9,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResetPasswordRequest {
+public class AdminChangePasswordRequest {
 
-    @NotBlank(message = "Token không được để trống")
-    private String token;
-
-    @NotBlank(message = "Password không được để trống")
-    @Size(min = 6, message = "Password phải có ít nhất 6 ký tự")
+    @NotBlank(message = "Mật khẩu mới không được để trống")
+    @Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự")
     private String newPassword;
 
-    @NotBlank(message = "Vui lòng nhập lại password")
+    @NotBlank(message = "Vui lòng nhập lại mật khẩu mới")
     private String confirmPassword;
 
     // Getters and Setters
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public String getNewPassword() {
         return newPassword;
     }

@@ -1,6 +1,7 @@
 package iuh.fit.controllers;
 
 import iuh.fit.dtos.user.AdminChangePasswordRequest;
+import iuh.fit.dtos.user.ChangePasswordRequest;
 import iuh.fit.dtos.user.CreateUserRequest;
 import iuh.fit.dtos.user.UpdateUserRequest;
 import iuh.fit.dtos.user.UserDTO;
@@ -141,15 +142,14 @@ public class UserController {
     }
 
     /**
-     * PUT /api/users/{id}/admin-change-password
-     * Admin thay đổi mật khẩu của user
-     * Chỉ cần nhập: newPassword, confirmPassword (không cần oldPassword)
+     * PUT /api/users/{id}/change-password
+     * Đổi mật khẩu
      */
-    @PutMapping("/{id}/admin-change-password")
-    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    public ResponseEntity<Map<String, Object>> adminChangePassword(
+    @PutMapping("/{id}/change-password")
+    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'USER')")
+    public ResponseEntity<Map<String, Object>> changePassword(
             @PathVariable Long id,
-            @Valid @RequestBody AdminChangePasswordRequest request) {
+            @Valid @RequestBody ChangePasswordRequest request) {
 
         User currentUser = getCurrentUser();
 
@@ -163,10 +163,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         
-        // Admin thay đổi password của user - không cần kiểm tra oldPassword
         response.put("status", HttpStatus.OK.value());
-        response.put("data", userService.changePassword(id, null, request.getNewPassword(), currentUser));
-        response.put("message", "Đổi mật khẩu của user thành công");
+        response.put("data", userService.changePassword(id, request.getOldPassword(), request.getNewPassword(), currentUser));
+        response.put("message", "Đổi mật khẩu thành công");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

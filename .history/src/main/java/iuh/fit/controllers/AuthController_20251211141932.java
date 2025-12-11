@@ -2,6 +2,8 @@ package iuh.fit.controllers;
 
 import iuh.fit.dtos.user.LoginRequest;
 import iuh.fit.dtos.user.RegisterRequest;
+import iuh.fit.dtos.user.ForgotPasswordRequest;
+import iuh.fit.dtos.user.ResetPasswordRequest;
 import iuh.fit.entities.User;
 import iuh.fit.entities.enums.Role;
 import iuh.fit.exceptions.UnauthorizedException;
@@ -16,8 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Authentication Controller
