@@ -135,7 +135,6 @@ public class OrderServiceImpl implements OrderService {
             Product product = productRepository.findById(dto.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found: " + dto.getProduct().getId()));
 
-            // 1.TRỪ TỒN KHO
             deductStock(product, dto.getQuantity());
 
             Double currentPrice = product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice();
