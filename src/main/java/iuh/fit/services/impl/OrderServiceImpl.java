@@ -369,9 +369,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO checkout(User currentUser, Cart cart, CheckoutRequest request) {
-        if (cart.getItems().isEmpty()) {
-            throw new RuntimeException("Giỏ hàng rỗng, không thể thanh toán.");
-        }
+//        if (cart.getItems().isEmpty()) {
+//            throw new RuntimeException("Giỏ hàng rỗng, không thể thanh toán.");
+//        }
 
         Order order = new Order();
         order.setOrderId(generateOrderId());
