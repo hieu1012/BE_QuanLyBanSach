@@ -407,9 +407,9 @@ public class OrderServiceImpl implements OrderService {
         order.setItems(items);
         order.setTotalPrice(calculatedTotal);
 
-        Order saved = orderRepository.save(order);
+//        Order saved = orderRepository.save(order);
 
-        OrderDTO resultDTO = modelMapper.map(saved, OrderDTO.class);
+        OrderDTO resultDTO = modelMapper.map(order, OrderDTO.class);
         enrichProductImage(resultDTO);
         return resultDTO;
     }

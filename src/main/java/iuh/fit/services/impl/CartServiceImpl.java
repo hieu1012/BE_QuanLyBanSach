@@ -186,8 +186,8 @@ public class CartServiceImpl implements CartService {
 
         OrderDTO newOrder = orderService.checkout(currentUser, cart, request);
 
-        // cart.getItems().clear();
-        // cart.setTotalAmount(0.0);
+         cart.getItems().clear();
+         cart.setTotalAmount(0.0);
 
         cartRepository.save(cart);
 
