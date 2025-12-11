@@ -11,7 +11,7 @@ import java.util.List;
 public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
     //Lấy chi tiết các sản phẩm trong 1 đơn hàng
     @Query("SELECT i FROM OrderItem i WHERE i.order.id = :orderId")
-    List<OrderItem> findByOrderId(@Param("orderId") Integer orderId);
+    List<OrderItem> findByOrderId(@Param("orderId") Long orderId);
 
     //Thống kê số lượng sản phẩm được bán theo productId
     @Query("SELECT SUM(i.quantity) FROM OrderItem i WHERE i.product.id = :productId")
