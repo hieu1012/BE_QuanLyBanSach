@@ -67,7 +67,7 @@ public class CartServiceImpl implements CartService {
                     Cart newCart = Cart.builder()
                             .user(user)
                             .totalAmount(0.0)
-                            .items(new ArrayList<>())
+//                            .items(new ArrayList<>())
                             .build();
                     return cartRepository.save(newCart);
                 });
@@ -180,17 +180,14 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartRepository.findByUserId(currentUser.getId())
                 .orElseThrow(() -> new ItemNotFoundException("Cart not found"));
 
-        if (cart.getItems().isEmpty()) {
-            throw new RuntimeException("Giỏ hàng rỗng");
-        }
+//        if (cart.getItems().isEmpty()) {
+//            throw new RuntimeException("Giỏ hàng rỗng");
+//        }
 
         OrderDTO newOrder = orderService.checkout(currentUser, cart, request);
 
-        List<CartItem> itemsToDelete = new ArrayList<>(cart.getItems());
-        cartItemRepository.deleteAll(itemsToDelete);
-
-        cart.getItems().clear();
-        cart.setTotalAmount(0.0);
+        // cart.getItems().clear();
+        // cart.setTotalAmount(0.0);
 
         cartRepository.save(cart);
 

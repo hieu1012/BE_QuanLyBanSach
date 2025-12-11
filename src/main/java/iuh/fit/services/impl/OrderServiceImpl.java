@@ -12,10 +12,7 @@ import iuh.fit.entities.enums.OrderStatus;
 import iuh.fit.entities.enums.Role;
 import iuh.fit.exceptions.ForbiddenException;
 import iuh.fit.exceptions.ItemNotFoundException;
-import iuh.fit.repositories.OrderItemRepository;
-import iuh.fit.repositories.OrderRepository;
-import iuh.fit.repositories.ProductRepository;
-import iuh.fit.repositories.UserRepository;
+import iuh.fit.repositories.*;
 import iuh.fit.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
+    private final CartRepository cartRepository;
 
     private String generateOrderId() {
         return "ORD-" + System.currentTimeMillis();
@@ -57,11 +56,31 @@ public class OrderServiceImpl implements OrderService {
 
     //Xử lý hoàn tồn kho (dùng khi hủy/xóa)
     private void restoreStock(Order order) {
-        for (OrderItem item : order.getItems()) {
+//        for (OrderItem item : order.getItems()) {
+//            Product product = productRepository.findById(item.getProduct().getId()).orElse(null);
+//            if (product != null) {
+//                product.setStock(product.getStock() + item.getQuantity());
+//                productRepository.save(product);
+//            }
+//        }
+        List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+
+        if (items.isEmpty()) {
+            System.out.println("CẢNH BÁO: Không tìm thấy sản phẩm nào trong đơn hàng " + order.getId() + " để hoàn kho.");
+            return;
+        }
+
+        for (OrderItem item : items) {
             Product product = productRepository.findById(item.getProduct().getId()).orElse(null);
+
             if (product != null) {
-                product.setStock(product.getStock() + item.getQuantity());
+                int oldStock = product.getStock();
+                int quantityToRestore = item.getQuantity();
+
+                product.setStock(oldStock + quantityToRestore);
+
                 productRepository.save(product);
+
             }
         }
     }
@@ -116,7 +135,6 @@ public class OrderServiceImpl implements OrderService {
             Product product = productRepository.findById(dto.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found: " + dto.getProduct().getId()));
 
-            // 1.TRỪ TỒN KHO
             deductStock(product, dto.getQuantity());
 
             Double currentPrice = product.getDiscountPrice() != null ? product.getDiscountPrice() : product.getPrice();
@@ -135,6 +153,17 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(calculatedTotalPrice);
 
         Order saved = orderRepository.save(order);
+
+        Optional<Cart> cartOptional = cartRepository.findByUserId(user.getId());
+
+        if (cartOptional.isPresent()) {
+            Cart cart = cartOptional.get();
+
+            cart.getItems().clear();
+            cart.setTotalAmount(0.0);
+
+            cartRepository.save(cart);
+        }
 
         OrderDTO resultDTO = modelMapper.map(saved, OrderDTO.class);
         enrichProductImage(resultDTO);
@@ -340,17 +369,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO checkout(User currentUser, Cart cart, CheckoutRequest request) {
-        if (cart.getItems().isEmpty()) {
-            throw new RuntimeException("Giỏ hàng rỗng, không thể thanh toán.");
-        }
+//        if (cart.getItems().isEmpty()) {
+//            throw new RuntimeException("Giỏ hàng rỗng, không thể thanh toán.");
+//        }
 
         Order order = new Order();
         order.setOrderId(generateOrderId());
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(OrderStatus.PROCESSING);
         order.setPaymentType(request.getPaymentType());
         order.setUser(currentUser);
-        order.setOrderAddress(modelMapper.map(request.getOrderAddress(), OrderAddress.class));
+
+        OrderAddress address = modelMapper.map(request.getOrderAddress(), OrderAddress.class);
+        address.setId(null);
+        order.setOrderAddress(address);
 
         List<OrderItem> items = new ArrayList<>();
         double calculatedTotal = 0.0;
@@ -373,7 +405,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setItems(items);
-
         order.setTotalPrice(calculatedTotal);
 
         Order saved = orderRepository.save(order);
