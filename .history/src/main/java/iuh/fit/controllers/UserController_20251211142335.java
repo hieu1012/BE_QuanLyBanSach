@@ -1,6 +1,7 @@
 package iuh.fit.controllers;
 
 import iuh.fit.dtos.user.AdminChangePasswordRequest;
+import iuh.fit.dtos.user.ChangePasswordRequest;
 import iuh.fit.dtos.user.CreateUserRequest;
 import iuh.fit.dtos.user.UpdateUserRequest;
 import iuh.fit.dtos.user.UserDTO;
